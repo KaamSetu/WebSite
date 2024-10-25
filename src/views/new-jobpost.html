@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post a Job - KaamSetu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00978A;
+            --secondary-color: #465FA2;
+            --background-color: #f4f4f4;
+            --text-color: #333;
+            --error-color: #ff6b6b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .cta-button {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background-color: #007f75;
+        }
+
+        /* Main Content Styles */
+        main {
+            padding: 2rem 0;
+        }
+
+        .form-section {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0, 151, 138, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .char-counter {
+            font-size: 0.8rem;
+            color: #777;
+            text-align: right;
+            margin-top: 0.25rem;
+        }
+
+        /* Budget Slider */
+        .budget-slider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .slider {
+            flex-grow: 1;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 10px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        input[type="range"]:hover {
+            opacity: 1;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #007f75;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: var(--secondary-color);
+            color: #fff;
+            padding: 2rem 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-links a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .form-section {
+                padding: 1.5rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+        /* Form validation styles */
+        .error {
+            border-color: var(--error-color) !important;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Tooltip styles */
+        .tooltip {
+            background-color: #333;
+            color: #fff;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            position: absolute;
+            z-index: 1;
+            margin-top: 0.5rem;
+            max-width: 250px;
+        }
+
+        /* Confirmation animation styles */
+        .confirmation-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .confirmation-message {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .checkmark__circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+            stroke: var(--primary-color);
+            fill: none;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+
+        .checkmark {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 2;
+            stroke: #fff;
+            stroke-miterlimit: 10;
+            margin: 10% auto;
+            box-shadow: inset 0px 0px 0px var(--primary-color);
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+        }
+
+        .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+        }
+
+        @keyframes stroke {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes scale {
+            0%, 100% {
+                transform: none;
+            }
+            50% {
+                transform: scale3d(1.1, 1.1, 1);
+            }
+        }
+
+        @keyframes fill {
+            100% {
+                box-shadow: inset 0px 0px 0px 30px var(--primary-color);
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .form-section {
+                padding: 1rem;
+            }
+
+            .budget-slider {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .tooltip {
+                position: static;
+                margin-top: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">KaamSetu</div>
+            <div class="nav-links">
+                <a href="#">Home</a>
+                <a href="#">Dashboard</a>
+                <a href="#">Profile</a>
+                <a href="#">Job History</a>
+            </div>
+            <a href="#" class="cta-button">Post a Job</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="form-section">
+            <h2>Post a Job</h2>
+            <form id="post-job-form">
+                <div class="form-group">
+                    <label for="job-title">Job Title</label>
+                    <input type="text" id="job-title" name="job-title" placeholder="E.g., Plumbing Repair" required>
+                    <small>Provide a clear and concise title for your job.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="job-description">Job Description</label>
+                    <textarea id="job-description" name="job-description" placeholder="Please describe the task in detail, including any specific requirements." required></textarea>
+                    <div class="char-counter"><span id="char-count">0</span> / 500</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="job-category">Job Category</label>
+                    <select id="job-category" name="job-category" required>
+                        <option value="">Select a category</option>
+                        <option value="plumbing">Plumbing</option>
+                        <option value="electrical">Electrical</option>
+                        <option value="carpentry">Carpentry</option>
+                        <option value="painting">Painting</option>
+                        <option value="landscaping">Landscaping</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="labor-type">Labor Type</label>
+                    <select id="labor-type" name="labor-type" required>
+                        <option value="">Select labor type</option>
+                        <option value="hourly">Hourly</option>
+                        <option value="daily">Daily</option>
+                        <option value="contract">Contract</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="num-laborers">Number of Laborers</label>
+                    <input type="number" id="num-laborers" name="num-laborers" min="1" max="50" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="start-date">Start Date</label>
+                    <input type="date" id="start-date" name="start-date" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="duration">Duration (in days)</label>
+                    <input type="number" id="duration" name="duration" min="1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="job-location">Job Location</label>
+                    <input type="text" id="job-location" name="job-location" placeholder="Enter job address" required>
+                    <button type="button" id="get-location">Use Current Location</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="start-time">Preferred Job Start Time</label>
+                    <select id="start-time" name="start-time" required>
+                        <option value="">Select start time</option>
+                        <option value="morning">Morning (6 AM - 12 PM)</option>
+                        <option value="afternoon">Afternoon (12 PM - 6 PM)</option>
+                        <option value="evening">Evening (6 PM - 10 PM)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="budget">Budget Range</label>
+                    <div class="budget-slider">
+                        <span id="min-budget">₹0</span>
+                        <input type="range" id="budget" name="budget" min="0" max="10000" step="100" class="slider">
+                        <span id="max-budget">₹10,000</span>
+                    </div>
+                    <div id="budget-value"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="payment-method">Payment Method</label>
+                    <select id="payment-method" name="payment-method" required>
+                        <option value="">Select payment method</option>
+                        <option value="upi">UPI</option>
+                        <option value="cash">Cash</option>
+                        <option value="bank-transfer">Bank Transfer</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit and Review Job</button>
+            </form>
+        </section>
+
+        <section id="job-summary" class="form-section" style="display: none;">
+            <h2>Job Summary</h2>
+            <div id="summary-content"></div>
+            <button id="edit-job" class="submit-btn">Edit Job</button>
+            <button id="confirm-job" class="submit-btn">Confirm and Post Job</button>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-links">
+                <a href="#">Terms & Conditions</a>
+                <a href="#">FAQs</a>
+                <a href="#">Help</a>
+            </div>
+            <div class="contact-info">
+                Support: support@kaamsetu.com | Phone: +91 1234567890
+            </div>
+            <div class="logo">KaamSetu</div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('post-job-form');
+            const jobSummary = document.getElementById('job-summary');
+            const summaryContent = document.getElementById('summary-content');
+            const editJobBtn = document.getElementById('edit-job');
+            const confirmJobBtn = document.getElementById('confirm-job');
+            const charCount = document.getElementById('char-count');
+            const jobDescription = document.getElementById('job-description');
+            const budgetSlider = document.getElementById('budget');
+            const budgetValue = document.getElementById('budget-value');
+            const getLocationBtn = document.getElementById('get-location');
+
+            // Character counter for job description
+            jobDescription.addEventListener('input', function() {
+                const remainingChars = 500 - this.value.length;
+                charCount.textContent = this.value.length;
+                if (remainingChars < 0) {
+                    this.value = this.value.slice(0, 500);
+                    charCount.textContent = 500;
+                }
+            });
+
+            // Budget slider
+            budgetSlider.addEventListener('input', function() {
+                budgetValue.textContent = `Budget: ₹${this.value}`;
+            });
+
+            // Geolocation
+            getLocationBtn.addEventListener('click', function() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        document.getElementById('job-location').value = `Lat: ${latitude}, Long: ${longitude}`;
+                    });
+                } else {
+                    alert("Geolocation is not supported by this browser.");
+                }
+            });
+
+            // Form submission and summary display
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(form);
+                let summaryHTML = '<h3>Job Details:</h3><ul>';
+                
+                for (let [key, value] of formData.entries()) {
+                    summaryHTML += `<li><strong>${key}:</strong> ${value}</li>`;
+                }
+                summaryHTML += '</ul>';
+                
+                summaryContent.innerHTML = summaryHTML;
+                form.style.display = 'none';
+                jobSummary.style.display = 'block';
+            });
+
+            // Edit job button
+            editJobBtn.addEventListener('click', function() {
+                jobSummary.style.display = 'none';
+                form.style.display = 'block';
+            });
+
+            // Confirm job button
+            confirmJobBtn.addEventListener('click', function() {
+                alert('Your job has been posted successfully!');
+                // Here you would typically send the data to your server
+                form.reset();
+                jobSummary.style.display = 'none';
+                form.style.display = 'block';
+            });
+
+            // Dynamic form section reveal
+            const formSections = document.querySelectorAll('.form-section');
+            const formInputs = document.querySelectorAll('input, textarea, select');
+
+            function revealNextSection(currentInput) {
+                const currentSection = currentInput.closest('.form-section');
+                const nextSection = currentSection.nextElementSibling;
+                if (nextSection && nextSection.classList.contains('form-section')) {
+                    nextSection.style.display = 'block';
+                    nextSection.style.opacity = '0';
+                    setTimeout(() => {
+                        nextSection.style.transition = 'opacity 0.5s ease-in-out';
+                        nextSection.style.opacity = '1';
+                    }, 10);
+                }
+            }
+
+            formInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    if (this.value.trim() !== '') {
+                        revealNextSection(this);
+                    }
+                });
+            });
+
+            // Real-time form validation
+            function validateInput(input) {
+                let isValid = true;
+                const errorSpan = input.nextElementSibling;
+
+                if (input.required && input.value.trim() === '') {
+                    isValid = false;
+                    showError(input, 'This field is required');
+                } else if (input.type === 'number' && (isNaN(input.value) || input.value < input.min || input.value > input.max)) {
+                    isValid = false;
+                    showError(input, `Please enter a number between ${input.min} and ${input.max}`);
+                } else if (input.id === 'job-title' && input.value.length < 10) {
+                    isValid = false;
+                    showError(input, 'Job title must be at least 10 characters long');
+                }
+
+                if (isValid) {
+                    hideError(input);
+                }
+
+                return isValid;
+            }
+
+            function showError(input, message) {
+                input.classList.add('error');
+                let errorSpan = input.nextElementSibling;
+                if (!errorSpan || !errorSpan.classList.contains('error-message')) {
+                    errorSpan = document.createElement('span');
+                    errorSpan.classList.add('error-message');
+                    input.parentNode.insertBefore(errorSpan, input.nextSibling);
+                }
+                errorSpan.textContent = message;
+            }
+
+            function hideError(input) {
+                input.classList.remove('error');
+                const errorSpan = input.nextElementSibling;
+                if (errorSpan && errorSpan.classList.contains('error-message')) {
+                    errorSpan.remove();
+                }
+            }
+
+            formInputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    validateInput(this);
+                });
+            });
+
+            // Form submission with validation
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                let isValid = true;
+                formInputs.forEach(input => {
+                    if (!validateInput(input)) {
+                        isValid = false;
+                    }
+                });
+
+                if (isValid) {
+                    const formData = new FormData(form);
+                    let summaryHTML = '<h3>Job Details:</h3><ul>';
+                    
+                    for (let [key, value] of formData.entries()) {
+                        summaryHTML += `<li><strong>${key}:</strong> ${value}</li>`;
+                    }
+                    summaryHTML += '</ul>';
+                    
+                    summaryContent.innerHTML = summaryHTML;
+                    form.style.display = 'none';
+                    jobSummary.style.display = 'block';
+                    
+                    // Smooth scroll to summary
+                    jobSummary.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+
+            // ... (rest of the previous code remains the same)
+
+            // Micro-interactions
+            formInputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.style.transform = 'scale(1.02)';
+                    this.style.transition = 'transform 0.3s ease';
+                });
+
+                input.addEventListener('blur', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+
+            // Dynamic budget color change
+            budgetSlider.addEventListener('input', function() {
+                const value = (this.value - this.min) / (this.max - this.min) * 100;
+                this.style.background = `linear-gradient(to right, #ff6b6b 0%, #ff6b6b ${value}%, #4ecdc4 ${value}%, #4ecdc4 100%)`;
+            });
+
+            // Job category tooltip
+            const jobCategory = document.getElementById('job-category');
+            const tooltip = document.createElement('div');
+            tooltip.classList.add('tooltip');
+            tooltip.style.display = 'none';
+            jobCategory.parentNode.appendChild(tooltip);
+
+            const categoryTips = {
+                plumbing: "Includes tasks like pipe repairs, fixture installations, and drain cleaning.",
+                electrical: "Covers wiring, lighting installations, and electrical system repairs.",
+                carpentry: "Involves woodworking, furniture assembly, and structural repairs.",
+                painting: "Includes interior and exterior painting jobs.",
+                landscaping: "Covers garden maintenance, lawn care, and outdoor design work."
+            };
+
+            jobCategory.addEventListener('change', function() {
+                const selectedCategory = this.value;
+                if (categoryTips[selectedCategory]) {
+                    tooltip.textContent = categoryTips[selectedCategory];
+                    tooltip.style.display = 'block';
+                } else {
+                    tooltip.style.display = 'none';
+                }
+            });
+
+            // Confirmation animation
+            function showConfirmation() {
+                const confirmationOverlay = document.createElement('div');
+                confirmationOverlay.classList.add('confirmation-overlay');
+                confirmationOverlay.innerHTML = `
+                    <div class="confirmation-message">
+                        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                            <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                            <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                        </svg>
+                        <h2>Job Posted Successfully!</h2>
+                    </div>
+                `;
+                document.body.appendChild(confirmationOverlay);
+
+                setTimeout(() => {
+                    confirmationOverlay.remove();
+                    form.reset();
+                    jobSummary.style.display = 'none';
+                    form.style.display = 'block';
+                }, 3000);
+            }
+
+            confirmJobBtn.addEventListener('click', function() {
+                showConfirmation();
+                // Here you would typically send the data to your server
+            });
+        });
+    </script>
+</body>
+</html>

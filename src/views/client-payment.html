@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payments - KaamSetu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f4f8;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+.payments-page {
+    max-width: 1200px;
+    margin: auto;
+}
+
+h1 {
+    text-align: center;
+    color: #00978A;
+}
+
+.overview {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 30px;
+}
+
+.overview-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    margin: 0 10px;
+    text-align: center;
+}
+
+.total-paid {
+    color: green;
+}
+
+.pending-payments {
+    color: red;
+}
+
+.payment-method {
+    color: #465FA2;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+.btn {
+    background-color: #00978A;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #00775D;
+}
+
+.pending-payment-card {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.pending-payment-card h3 {
+    margin: 0;
+    color: #465FA2;
+}
+
+.pending-payment-card p {
+    margin: 5px 0;
+}
+
+.summary-insights {
+    margin-top: 30px;
+}
+
+footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+footer a {
+    color: #00978A;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+    </style>
+</head>
+<body>
+    <div class="payments-page">
+        <h1>Payments Overview</h1>
+
+        <div class="overview">
+            <div class="overview-card total-paid">
+                <h2>Total Amount Paid</h2>
+                <p>₹<span id="totalPaid">0</span></p>
+            </div>
+            <div class="overview-card pending-payments">
+                <h2>Pending Payments</h2>
+                <p>₹<span id="pendingAmount">0</span></p>
+            </div>
+            <div class="overview-card payment-method">
+                <h2>Current Payment Method</h2>
+                <p id="currentPaymentMethod">Bank: Fake Bank Ltd.</p>
+                <p>Account No: 1234567890</p>
+                <button class="btn change-method" onclick="changePaymentMethod()">Change Method</button>
+            </div>
+        </div>
+
+        <div class="transaction-history">
+            <h2>Transaction History</h2>
+            <table id="transactionTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Laborer Name</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Transaction rows will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pending-payments-section">
+            <h2>Pending Payments</h2>
+            <div id="pendingPaymentsList"></div>
+        </div>
+
+        <div class="summary-insights">
+            <h2>Monthly Spending Summary</h2>
+            <canvas id="spendingChart"></canvas>
+            <div class="insights">
+                <p id="spendingInsights">You have made <span id="totalPaymentsCount">0</span> payments this month.</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>Need help? <a href="/support">Contact Support</a> | <a href="/terms">Terms & Conditions</a></p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Sample JSON data for transactions and pending payments
+const data = {
+    transactions: [
+        { date: '2023-09-01', laborer: 'John Doe', amount: 2000, status: 'Successful' },
+        { date: '2023-09-10', laborer: 'Jane Smith', amount: 1500, status: 'Successful' },
+        { date: '2023-09-15', laborer: 'Mike Johnson', amount: 2500, status: 'Refunded' },
+    ],
+    pendingPayments: [
+        { jobTitle: 'Cleaning Service', laborer: 'Anna Brown', amount: 1000, dueDate: '2023-09-25' },
+        { jobTitle: 'Gardening', laborer: 'Tom White', amount: 1200, dueDate: '2023-09-30' },
+    ],
+};
+
+// Function to populate the overview cards
+function populateOverview() {
+    const totalPaid = data.transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
+    const pendingAmount = data.pendingPayments.reduce((sum, payment) => sum + payment.amount, 0);
+    
+    document.getElementById('totalPaid').textContent = totalPaid;
+    document.getElementById('pendingAmount').textContent = pendingAmount;
+}
+
+// Function to populate transaction history
+function loadTransactionHistory() {
+    const tableBody = document.querySelector('#transactionTable tbody');
+    data.transactions.forEach(transaction => {
+        const row = `<tr>
+            <td>${transaction.date}</td>
+            <td>${transaction.laborer}</td>
+            <td>₹${transaction.amount}</td>
+            <td>${transaction.status}</td>
+            <td><button class="btn" onclick="viewDetails('${transaction.laborer}')">Details</button></td>
+        </tr>`;
+        tableBody.insertAdjacentHTML('beforeend', row);
+    });
+}
+
+// Function to populate pending payments
+function loadPendingPayments() {
+    const pendingList = document.getElementById('pendingPaymentsList');
+    data.pendingPayments.forEach(payment => {
+        const paymentCard = `<div class="pending-payment-card">
+            <h3>${payment.jobTitle}</h3>
+            <p>Laborer: ${payment.laborer}</p>
+            <p>Amount Due: ₹${payment.amount}</p>
+            <p>Due Date: ${payment.dueDate}</p>
+        </div>`;
+        pendingList.insertAdjacentHTML('beforeend', paymentCard);
+    });
+}
+
+// Function to change payment method (stub)
+function changePaymentMethod() {
+    alert('Change Payment Method feature is under development.');
+}
+
+// Load initial data
+populateOverview();
+loadTransactionHistory();
+loadPendingPayments();
+
+// Monthly Spending Summary Visualization
+const ctx = document.getElementById('spendingChart').getContext('2d');
+const spendingData = {
+    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+    datasets: [{
+        label: 'Spending in ₹',
+        data: [1000, 1500, 800, 2000],
+        backgroundColor: 'rgba(0, 151, 138, 0.5)',
+        borderColor: 'rgba(0, 151, 138, 1)',
+        borderWidth: 1
+    }]
+};
+
+const spendingChart = new Chart(ctx, {
+    type: 'bar',
+    data: spendingData,
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Amount (₹)'
+                }
+            },
+            x: {
+                title: {
+                    display: true,
+                    text: 'Weeks'
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top'
+            }
+        }
+    }
+});
+
+// Update spending insights
+document.getElementById('totalPaymentsCount').textContent = data.transactions.length;
+
+    </script>
+</body>
+</html>

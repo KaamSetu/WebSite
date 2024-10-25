@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KaamSetu - Manage Job</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS styles */
+        :root {
+            --primary-color: #00978A;
+            --secondary-color: #465FA2;
+            --light-gray: #f5f5f5;
+            --dark-gray: #333;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Job Overview Section */
+        .job-overview {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .job-overview h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        .job-overview p {
+            margin: 5px 0;
+        }
+
+        .job-overview .job-id {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Laborers and Supervisor Section */
+        .team-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .team-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .team-card {
+            background: var(--light-gray);
+            border-radius: 8px;
+            padding: 15px;
+            width: calc(33.333% - 50px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .team-card img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .team-card .status {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .status-active { background-color: #4CAF50; }
+        .status-awaiting { background-color: #FFC107; }
+        .status-issue { background-color: #F44336; }
+
+        /* Task Management Section */
+        .task-management {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .task-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .task-form input,
+        .task-form select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .task-form button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .task-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .task-card {
+            background: var(--light-gray);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-card.completed {
+            opacity: 0.6;
+            text-decoration: line-through;
+        }
+
+        /* Progress Tracker */
+        .progress-tracker {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(to right, #4CAF50, #45a049);
+            transition: width 0.5s ease-in-out;
+        }
+
+        /* Payment Management */
+        .payment-management {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.payment-status {
+    margin-bottom: 20px;
+}
+
+.payment-status h3 {
+    border-bottom: 2px solid #00978A;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.payment-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.payment-card {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.payment-card button {
+    background: #00978A;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.payment-card button:hover {
+    background: #007F75;
+}
+
+.payment-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.payment-info span {
+    color: #666;
+}
+
+
+
+        /* Communication Section */
+        .communication {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .update-feed {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .update-card {
+            background: var(--light-gray);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .chat-window {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .message.sent {
+            background-color: var(--primary-color);
+            color: white;
+            align-self: flex-end;
+        }
+
+        .message.received {
+            background-color: var(--light-gray);
+            align-self: flex-start;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .chat-input button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--dark-gray);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .team-card {
+                width: 100%;
+            }
+
+            .task-form {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <section class="job-overview">
+            <h1>Home Renovation Project</h1>
+            <p class="job-id">Job ID: KS1234</p>
+            <p>Start Date: September 15, 2024</p>
+            <p>Estimated Completion: October 30, 2024</p>
+            <p>Location: 123 Main St, Anytown, USA</p>
+        </section>
+
+        <section class="team-section">
+            <h2>Team</h2>
+            <div class="team-cards">
+                <!-- Team cards will be dynamically added here -->
+            </div>
+        </section>
+
+        <section class="task-management">
+            <h2>Task Management</h2>
+            <form class="task-form">
+                <select id="taskAssignee">
+                    <option value="">Select Assignee</option>
+                    <!-- Options will be dynamically added -->
+                </select>
+                <input type="text" placeholder="Task description" id="taskDescription">
+                <input type="date" id="taskDeadline">
+                <button type="submit">Assign Task</button>
+            </form>
+            <div class="task-list">
+                <!-- Tasks will be dynamically added here -->
+            </div>
+        </section>
+
+        <section class="progress-tracker">
+            <h2>Job Progress</h2>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" style="width: 0%;"></div>
+            </div>
+            <p>Overall Progress: <span id="progressPercentage">0%</span></p>
+        </section>
+
+        <section class="payment-management">
+            <h2>Payment Management</h2>
+        
+            <div class="payment-status">
+                <h3>Completed Payments</h3>
+                <div class="payment-list" id="completedPayments">
+                    <!-- Completed payments will be dynamically added here -->
+                </div>
+            </div>
+        
+            <div class="payment-status">
+                <h3>Pending Payments</h3>
+                <div class="payment-list" id="pendingPayments">
+                    <!-- Pending payments will be dynamically added here -->
+                </div>
+            </div>
+        
+            <div class="payment-status">
+                <h3>Upcoming Payments</h3>
+                <div class="payment-list" id="upcomingPayments">
+                    <!-- Upcoming payments will be dynamically added here -->
+                </div>
+            </div>
+        </section>
+        
+
+        <section class="communication">
+            <h2>Job Updates and Communication</h2>
+            <div class="update-feed">
+                <!-- Job updates will be dynamically added here -->
+            </div>
+            <div class="chat-window">
+                <!-- Chat messages will be dynamically added here -->
+            </div>
+            <div class="chat-input">
+                <input type="text" placeholder="Type a message...">
+                <button>Send</button>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 KaamSetu. All rights reserved. | <a href="#">Help</a> | <a href="#">Terms & Conditions</a> | <a href="#">Contact Support</a></p>
+    </footer>
+
+    <script>
+        // JavaScript code
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sample data (in a real application, this would come from a backend)
+            const teamMembers = [
+                { name: 'John Doe', role: 'Carpenter', status: 'active', image: 'https://example.com/john.jpg' },
+                { name: 'Jane Smith', role: 'Electrician', status: 'awaiting', image: 'https://example.com/jane.jpg' },
+                { name: 'Mike Johnson', role: 'Plumber', status: 'active', image: 'https://example.com/mike.jpg' },
+                { name: 'Sarah Brown', role: 'Supervisor', status: 'active', image: 'https://example.com/sarah.jpg' }
+            ];
+
+            const tasks = [
+                { id: 1, assignee: 'John Doe', description: 'Install kitchen cabinets', status: 'in-progress', deadline: '2024-09-25' },
+                { id: 2, assignee: 'Jane Smith', description: 'Wire living room outlets', status: 'pending', deadline: '2024-09-28' },
+                { id: 3, assignee: 'Mike Johnson', description: 'Install bathroom fixtures', status: 'completed', deadline: '2024-09-20' }
+            ];
+
+            // Populate team members
+            const teamCardsContainer = document.querySelector('.team-cards');
+            teamMembers.forEach(member => {
+                const card = document.createElement('div');
+                card.classList.add('team-card');
+                card.innerHTML = `
+                    <img src="${member.image}" alt="${member.name}">
+                    <h3>${member.name}</h3>
+                    <p>${member.role}</p>
+                    <span class="status status-${member.status}"></span>
+                    <span>${member.status}</span>
+                `;
+                teamCardsContainer.appendChild(card);
+
+                // Add to task assignee dropdown
+                const option = document.createElement('option');
+                option.value = member.name;
+                option.textContent = member.name;
+                document.getElementById('taskAssignee').appendChild(option);
+            });
+
+            // Populate tasks
+            const taskList = document.querySelector('.task-list');
+            function renderTasks() {
+                taskList.innerHTML = '';
+                tasks.forEach(task => {
+                    const taskCard = document.createElement('div');
+                    taskCard.classList.add('task-card');
+                    if (task.status === 'completed') {
+                        taskCard.classList.add('completed');
+                    }
+                    taskCard.innerHTML = `
+                        <div>
+                            <h4>${task.description}</h4>
+                            <p>Assigned to: ${task.assignee}</p>
+                            <p>Deadline: ${task.deadline}</p>
+                        </div>
+                        <div>
+                            <span class="status status-${task.status}"></span>
+                            <span>${task.status}</span>
+                        </div>
+                    `;
+                    taskList.appendChild(taskCard);
+                });
+                updateProgress();
+            }
+
+            renderTasks();
+
+            // Handle task assignment
+            document.querySelector('.task-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const newTask = {
+                    id: tasks.length + 1,
+                    assignee: document.getElementById('taskAssignee').value,
+                    description: document.getElementById('taskDescription').value,
+                    status: 'pending',
+                    deadline: document.getElementById('taskDeadline').value
+                };
+                tasks.push(newTask);
+                renderTasks();
+                this.reset();
+            });
+
+            // Update progress
+            function updateProgress() {
+                const totalTasks = tasks.length;
+                const completedTasks = tasks.filter(task => task.status === 'completed').length;
+                const progressPercentage = Math.round((completedTasks / totalTasks) * 100);
+                document.querySelector('.progress-bar-fill').style.width = `${progressPercentage}%`;
+                document.getElementById('progressPercentage').textContent = `${progressPercentage}%`;
+            }
+
+
+
+            // Sample payment data
+const payments = [
+    { id: 1, description: 'Payment for labor - John Doe', amount: 200, status: 'completed' },
+    { id: 2, description: 'Payment for milestone 1 - Electrical Work', amount: 150, status: 'pending' },
+    { id: 3, description: 'Payment for labor - Mike Johnson', amount: 100, status: 'completed' },
+    { id: 4, description: 'Payment for milestone 2 - Plumbing', amount: 120, status: 'upcoming' }
+];
+
+// Populate payment sections
+function renderPayments() {
+    const completedPayments = document.getElementById('completedPayments');
+    const pendingPayments = document.getElementById('pendingPayments');
+    const upcomingPayments = document.getElementById('upcomingPayments');
+
+    payments.forEach(payment => {
+        const paymentCard = document.createElement('div');
+        paymentCard.classList.add('payment-card');
+        
+        paymentCard.innerHTML = `
+            <div class="payment-info">
+                <strong>${payment.description}</strong>
+                <span>Amount: ₹${payment.amount}</span>
+                <span>Status: ${payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}</span>
+            </div>
+            <div class="payment-actions">
+                ${payment.status === 'pending' ? '<button onclick="payNow(' + payment.id + ')">Pay Now</button>' : ''}
+                <button onclick="downloadReceipt('Receipt_' + payment.id + '.pdf')">Download Receipt</button>
+            </div>
+        `;
+
+        if (payment.status === 'completed') {
+            completedPayments.appendChild(paymentCard);
+        } else if (payment.status === 'pending') {
+            pendingPayments.appendChild(paymentCard);
+        } else if (payment.status === 'upcoming') {
+            upcomingPayments.appendChild(paymentCard);
+        }
+    });
+}
+
+// Payment function (simulated)
+function payNow(paymentId) {
+    alert('Processing payment for Payment ID: ' + paymentId);
+    // Add payment processing logic here
+}
+
+// Download receipt function (simulated)
+function downloadReceipt(filename) {
+    alert('Downloading receipt: ' + filename);
+    // Add logic to generate and download receipt
+}
+
+// Call the function to render payments on page load
+renderPayments();
+
+
+
+            // Handle chat
+            const chatInput = document.querySelector('.chat-input input');
+            const chatSendButton = document.querySelector('.chat-input button');
+            const chatWindow = document.querySelector('.chat-window');
+
+            chatSendButton.addEventListener('click', function() {
+                if (chatInput.value.trim() !== '') {
+                    const message = document.createElement('div');
+                    message.classList.add('message', 'sent');
+                    message.textContent = chatInput.value;
+                    chatWindow.appendChild(message);
+                    chatInput.value = '';
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                }
+            });
+
+                        // Sample job update (in a real app, this would be dynamic)
+                        const updateFeed = document.querySelector('.update-feed');
+            const update = document.createElement('div');
+            update.classList.add('update-card');
+            update.innerHTML = `
+                <h4>Task Completed</h4>
+                <p>Mike Johnson has completed installing bathroom fixtures.</p>
+                <small>September 20, 2024 - 2:30 PM</small>
+            `;
+            updateFeed.appendChild(update);
+
+            // Function to handle Enter key for chat
+            chatInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault(); // Prevent form submission
+                    chatSendButton.click(); // Trigger the send button
+                }
+            });
+
+            // Handle adding new job updates
+            function addJobUpdate(message) {
+                const updateCard = document.createElement('div');
+                updateCard.classList.add('update-card');
+                updateCard.innerHTML = `
+                    <h4>New Update</h4>
+                    <p>${message}</p>
+                    <small>${new Date().toLocaleString()}</small>
+                `;
+                updateFeed.appendChild(updateCard);
+            }
+
+            // Example of adding a new update on a task completion
+            const addUpdateButton = document.createElement('button');
+            addUpdateButton.textContent = 'Add Update';
+            addUpdateButton.style.marginTop = '10px';
+            document.querySelector('.task-management').appendChild(addUpdateButton);
+
+            addUpdateButton.addEventListener('click', function() {
+                const updateMessage = prompt('Enter update message:');
+                if (updateMessage) {
+                    addJobUpdate(updateMessage);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

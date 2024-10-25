@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laborer Profile Page</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        h2 {
+            color: #00978A;
+            border-bottom: 2px solid #00978A;
+            padding-bottom: 10px;
+        }
+
+        /* Profile Information Section */
+        .profile-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+
+        .profile-details {
+            flex-grow: 1;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .contact-info {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .skill-tag {
+            background-color: #00978A;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .location {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .qr-code {
+            width: 100px;
+            height: 100px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Account Settings Section */
+        .account-settings form {
+            display: grid;
+            gap: 10px;
+        }
+
+        .account-settings input,
+        .account-settings select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .account-settings button {
+            background-color: #00978A;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .account-settings button:hover {
+            background-color: #007a6e;
+        }
+
+        /* Profile Management Section */
+        .profile-management textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+
+        .file-upload {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .calendar-day {
+            padding: 10px;
+            text-align: center;
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+
+        .calendar-day.available {
+            background-color: #00978A;
+            color: white;
+        }
+
+        /* Ratings & Reviews Section */
+        .ratings-reviews .star {
+            color: #00978A;
+            font-size: 24px;
+        }
+
+        .review {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .review-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Performance Analytics Section */
+        .analytics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .analytics-item {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .analytics-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00978A;
+        }
+
+        /* Group Management Section */
+        .group-info {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        /* Security Settings Section */
+        .security-settings .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .security-settings .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .security-settings .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .security-settings .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        .security-settings input:checked + .slider {
+            background-color: #00978A;
+        }
+
+        .security-settings input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Support & Help Section */
+        .faq-item {
+            margin-bottom: 10px;
+        }
+
+        .faq-question {
+            background-color: #f0f0f0;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .faq-answer {
+            padding: 10px;
+            display: none;
+        }
+
+        /* Verification Status Section */
+        .verification-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: #00978A;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .verification-badge::before {
+            content: "✓";
+            margin-right: 5px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Basic Profile Information Section -->
+        <section class="profile-info">
+            <img src="https://via.placeholder.com/150" alt="Profile Picture" class="profile-picture" id="profile-picture">
+            <div class="profile-details">
+                <h1 class="profile-name" id="profile-name">John Doe</h1>
+                <div class="contact-info">
+                    <p id="profile-email">johndoe@example.com</p>
+                    <p id="profile-phone">+1 234 567 8900</p>
+                </div>
+                <div class="skill-tags" id="skill-tags">
+                    <span class="skill-tag">Carpentry</span>
+                    <span class="skill-tag">Plumbing</span>
+                    <span class="skill-tag">Electrical</span>
+                </div>
+                <p class="location" id="profile-location">New York, NY</p>
+            </div>
+            <div class="qr-code" id="qr-code">QR Code</div>
+        </section>
+
+        <!-- Account Settings Section -->
+        <section class="account-settings">
+            <h2>Account Settings</h2>
+            <form id="account-settings-form">
+                <input type="password" placeholder="Current Password" required>
+                <input type="password" placeholder="New Password" required>
+                <input type="password" placeholder="Confirm New Password" required>
+                <input type="text" placeholder="UPI ID" id="upi-id">
+                <input type="text" placeholder="Bank Account Number" id="bank-account">
+                <input type="text" placeholder="IFSC Code" id="ifsc-code">
+                <select id="language-preference">
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                </select>
+                <div>
+                    <label>
+                        <input type="checkbox" id="email-notifications"> Email Notifications
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input type="checkbox" id="sms-notifications"> SMS Notifications
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input type="checkbox" id="app-notifications"> In-App Notifications
+                    </label>
+                </div>
+                <button type="submit">Save Changes</button>
+            </form>
+        </section>
+
+        <!-- Profile Management Section -->
+        <section class="profile-management">
+            <h2>Profile Management</h2>
+            <textarea id="bio" placeholder="Enter your bio"></textarea>
+            <input type="number" id="experience" placeholder="Years of Experience">
+            <select id="job-preference">
+                <option value="day">Day Jobs</option>
+                <option value="contract">Contract Work</option>
+                <option value="both">Both</option>
+            </select>
+            <div class="file-upload" id="certification-upload">
+                <p>Drag and drop or click to upload certifications</p>
+            </div>
+            <h3>Work Availability Calendar</h3>
+            <div class="calendar" id="availability-calendar"></div>
+            <button id="save-availability">Save Availability</button>
+        </section>
+
+        <!-- Ratings & Reviews Section -->
+        <section class="ratings-reviews">
+            <h2>Ratings & Reviews</h2>
+            <div class="average-rating">
+                <span class="star">★★★★☆</span>
+                <span id="average-rating-value">4.5</span>
+            </div>
+            <div id="reviews-container">
+                <!-- Reviews will be dynamically added here -->
+            </div>
+        </section>
+
+        <!-- Performance Analytics Section -->
+        <section class="performance-analytics">
+            <h2>Performance Analytics</h2>
+            <div class="analytics">
+                <div class="analytics-item">
+                    <h3>Total Jobs Completed</h3>
+                    <p class="analytics-value" id="total-jobs">50</p>
+                </div>
+                <div class="analytics-item">
+                    <h3>Average Client Rating</h3>
+                    <p class="analytics-value" id="average-rating">4.5</p>
+                </div>
+                <div class="analytics-item">
+                    <h3>Total Earnings</h3>
+                    <p class="analytics-value" id="total-earnings">$5000</p>
+                </div>
+                <div class="analytics-item">
+                    <h3>Most Common Job Types</h3>
+                    <canvas id="job-types-chart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Group Management Section -->
+        <section class="group-management">
+            <h2>Group Management</h2>
+            <div class="group-info">
+                <h3>Group Name: <span id="group-name">Elite Builders</span></h3>
+                <p>Group Leader: <span id="group-leader">Jane Smith</span></p>
+                <p>Group Performance: <span id="group-performance">4.8 ★</span></p>
+            </div>
+            <form id="group-invite-form">
+                <input type="text" placeholder="Enter QR Code or Profile Link" id="invite-input">
+                <button type="submit">Send Invitation</button>
+            </form>
+            <button id="leave-group">Leave Group</button>
+        </section>
+
+        <!-- Security Settings Section -->
+        <section class="security-settings">
+            <h2>Security Settings</h2>
+            <div>
+                <label class="switch">
+                    <input type="checkbox" id="two-factor-auth">
+                    <span class="slider"></span>
+                </label>
+                Enable Two-Factor Authentication
+            </div>
+            <button id="generate-backup-codes">Generate Backup Codes</button>
+            <form id="security-questions-form">
+                <select id="security-question-1">
+                    <option value="">Select a security question</option>
+                    <option value="pet-name">What was your first pet's name?</option>
+                    <option value="mother-maiden">What is your mother's maiden name?</option>
+                    <option value="birth-city">In what city were you born?</option>
+                </select>
+                <input type="text" placeholder="Answer" id="security-answer-1">
+                <button type="submit">Save Security Questions</button>
+            </form>
+        </section>
+
+        <!-- Support & Help Section -->
+        <section class="support-help">
+            <h2>Support & Help</h2>
+            <div class="faq">
+                <div class="faq-item">
+                    <div class="faq-question">How do I update my profile information?</div>
+                    <div class="faq-answer">You can update your profile information by clicking on the edit icons next to each field in the Basic Profile Information section.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">How can I change my payment details?</div>
+                    <div class="faq-answer">To change your payment details, go to the Account Settings section and update your UPI ID or bank account information.</div>
+                </div>
+                <!-- Add more FAQ items as needed -->
+            </div>
+            <form id="contact-support-form">
+                <h3>Contact Support</h3>
+                <input type="text" placeholder="Subject" required>
+                <textarea placeholder="Describe your issue" required></textarea>
+                <button type="submit">Submit</button>
+            </form>
+            <button id="report-problem">Report a Problem</button>
+        </section>
+
+        <!-- Verification Status Section -->
+        <section class="verification-status">
+            <h2>Verification Status</h2>
+            <div class="verification-badge">Verified</div>
+            <div class="file-upload" id="verification-document-upload">
+                <p>Drag and drop or click to upload verification documents</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modals -->
+    <div id="edit-profile-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Profile</h2>
+            <form id="edit-profile-form">
+                <input type="text" id="edit-name" placeholder="Name">
+                <input type="email" id="edit-email" placeholder="Email">
+                <input type="tel" id="edit-phone" placeholder="Phone">
+                <input type="text" id="edit-location" placeholder="Location">
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="review-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Review Details</h2>
+            <div id="review-details"></div>
+        </div>
+    </div>
+
+    <script>
+        // Profile Information Section
+        const profilePicture = document.getElementById('profile-picture');
+        const profileName = document.getElementById('profile-name');
+        const profileEmail = document.getElementById('profile-email');
+        const profilePhone = document.getElementById('profile-phone');
+        const skillTags = document.getElementById('skill-tags');
+        const profileLocation = document.getElementById('profile-location');
+        const qrCode = document.getElementById('qr-code');
+
+        profilePicture.addEventListener('click', () => {
+            // Implement profile picture upload functionality
+            console.log('Upload profile picture');
+        });
+
+        qrCode.addEventListener('mouseover', () => {
+            qrCode.textContent = 'Scan to view profile';
+        });
+
+        qrCode.addEventListener('mouseout', () => {
+            qrCode.textContent = 'QR Code';
+        });
+
+        // Account Settings Section
+        const accountSettingsForm = document.getElementById('account-settings-form');
+        accountSettingsForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Implement account settings update functionality
+            console.log('Account settings updated');
+        });
+
+        // Profile Management Section
+        const certificationUpload = document.getElementById('certification-upload');
+        certificationUpload.addEventListener('click', () => {
+            // Implement certification upload functionality
+            console.log('Upload certification');
+        });
+
+        const availabilityCalendar = document.getElementById('availability-calendar');
+        const saveAvailability = document.getElementById('save-availability');
+
+        // Generate calendar days
+        for (let i = 1; i <= 31; i++) {
+            const day = document.createElement('div');
+            day.classList.add('calendar-day');
+            day.textContent = i;
+            day.addEventListener('click', () => {
+                day.classList.toggle('available');
+            });
+            availabilityCalendar.appendChild(day);
+        }
+
+        saveAvailability.addEventListener('click', () => {
+            // Implement save availability functionality
+            console.log('Availability saved');
+        });
+
+        // Ratings & Reviews Section
+        const reviewsContainer = document.getElementById('reviews-container');
+        const sampleReviews = [
+            { name: 'Alice', job: 'Plumbing', rating: 5, text: 'Excellent work!' },
+            { name: 'Bob', job: 'Carpentry', rating: 4, text: 'Good job, on time.' },
+            { name: 'Charlie', job: 'Electrical', rating: 5, text: 'Very professional.' }
+        ];
+
+        sampleReviews.forEach(review => {
+            const reviewElement = document.createElement('div');
+            reviewElement.classList.add('review');
+            reviewElement.innerHTML = `
+                <h4>${review.name} - ${review.job}</h4>
+                <p>Rating: ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</p>
+                <p>${review.text}</p>
+                <div class="review-actions">
+                    <button class="hide-review">Hide</button>
+                    <button class="flag-review">Flag</button>
+                </div>
+            `;
+            reviewsContainer.appendChild(reviewElement);
+        });
+
+        // Performance Analytics Section
+        const ctx = document.getElementById('job-types-chart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Carpentry', 'Plumbing', 'Electrical', 'Painting'],
+                datasets: [{
+                    data: [30, 25, 20, 25],
+                    backgroundColor: ['#00978A', '#465FA2', '#FFB347', '#FF6B6B']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Job Types Distribution'
+                    }
+                }
+            }
+        });
+
+        // Group Management Section
+        const groupInviteForm = document.getElementById('group-invite-form');
+        const leaveGroup = document.getElementById('leave-group');
+
+        groupInviteForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Implement group invite functionality
+            console.log('Group invitation sent');
+        });
+
+        leaveGroup.addEventListener('click', () => {
+            if (confirm('Are you sure you want to leave the group?')) {
+                // Implement leave group functionality
+                console.log('Left the group');
+            }
+        });
+
+        // Security Settings Section
+        const twoFactorAuth = document.getElementById('two-factor-auth');
+        const generateBackupCodes = document.getElementById('generate-backup-codes');
+        const securityQuestionsForm = document.getElementById('security-questions-form');
+
+        twoFactorAuth.addEventListener('change', () => {
+            if (twoFactorAuth.checked) {
+                // Implement 2FA setup
+                console.log('2FA enabled');
+            } else {
+                console.log('2FA disabled');
+            }
+        });
+
+        generateBackupCodes.addEventListener('click', () => {
+            // Implement backup codes generation
+            console.log('Backup codes generated');
+        });
+
+        securityQuestionsForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Implement security questions save functionality
+            console.log('Security questions saved');
+        });
+
+        // Support & Help Section
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        const contactSupportForm = document.getElementById('contact-support-form');
+        const reportProblem = document.getElementById('report-problem');
+
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+            });
+        });
+
+        contactSupportForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Implement contact support functionality
+            console.log('Support request sent');
+        });
+
+        reportProblem.addEventListener('click', () => {
+            // Implement report problem functionality
+            console.log('Problem reported');
+        });
+
+        // Verification Status Section
+        const verificationDocumentUpload = document.getElementById('verification-document-upload');
+        verificationDocumentUpload.addEventListener('click', () => {
+            // Implement verification document upload functionality
+            console.log('Upload verification document');
+        });
+
+        // Modal functionality
+        const editProfileModal = document.getElementById('edit-profile-modal');
+        const reviewModal = document.getElementById('review-modal');
+        const closeButtons = document.querySelectorAll('.close');
+
+        profileName.addEventListener('click', () => {
+            editProfileModal.style.display = 'block';
+        });
+
+        closeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                button.closest('.modal').style.display = 'none';
+            });
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === editProfileModal) {
+                editProfileModal.style.display = 'none';
+            }
+            if (e.target === reviewModal) {
+                reviewModal.style.display = 'none';
+            }
+        });
+
+        const editProfileForm = document.getElementById('edit-profile-form');
+        editProfileForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Implement profile update functionality
+            console.log('Profile updated');
+            editProfileModal.style.display = 'none';
+        });
+
+        // Initialize tooltips, if using a library like Bootstrap
+        // $(function () {
+        //     $('[data-toggle="tooltip"]').tooltip()
+        // })
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+Pages for Small Clients in KaamSetu:
+Profile Page:
+
+Manage personal details, upload profile picture, manage account and job preferences, set up payment methods, view reviews, and adjust profile visibility.
+Post a Job Page:
+
+Form for small clients to post job details, select laborers, add optional job requirements, and submit the job for interested laborers to respond.
+All Jobs Page (Completed, Ongoing, Posted):
+
+Displays all jobs posted by the client, with filters for status (completed, ongoing, posted). Each job shows basic details, status, and links to more detailed views.
+Manage Job Page (Detailed for Current Ongoing Jobs and Laborers):
+
+A detailed page for managing specific ongoing jobs. View laborers selected for the job, assign tasks, track progress, and communicate with the laborers or supervisor.
+Payments Page:
+
+Displays the client's transaction history, payment details, and the option to manage payment methods. This includes payments made to laborers, pending payments, and other related financial information.
+Pages for Big Companies in KaamSetu:
+Company Profile Page:
+
+Advanced profile management for businesses, including company details, logos, contact info, team management, reviews from laborers, and the ability to manage different company branches or divisions.
+Company Post a Job Page:
+
+An advanced version of the job-posting page with additional fields for larger-scale job details, project timelines, budgets, and multiple job postings within a single project. Businesses can also specify engineers for site visits or supervisors to oversee labor.
+All Jobs Page (Company):
+
+Displays all jobs posted by the company, categorized by status (ongoing, completed, posted). Companies can sort jobs based on departments, divisions, or regions, and manage them at a more granular level.
+Manage Job Page (Company):
+
+A detailed view for managing ongoing large-scale projects. Includes assigning supervisors or engineers, reviewing labor performance, managing schedules, communicating with labor teams, and viewing job progress reports.
+Payments & Invoicing Page:
+
+A page for handling large-scale payment transactions, managing multiple financial accounts, invoices, and tracking payments across different company projects or departments.
+This breakdown separates the core functionalities and user experiences based on whether it's for a small client or a large company/business, ensuring tailored workflows for both types.

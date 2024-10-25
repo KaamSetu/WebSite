@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Labor Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #00978A;
+            --secondary-color: #465FA2;
+            --background-color: #f5f5f5;
+            --text-color: #333;
+            --error-color: #ff4444;
+            --success-color: #4CAF50;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .help-link {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+
+        .registration-form {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        .file-upload {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 10px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: #fff;
+        }
+
+        .progress-bar {
+            height: 5px;
+            background-color: #ddd;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .success-message {
+            color: var(--success-color);
+            font-size: 18px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .registration-form {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Labor Connect</div>
+            <a href="#" class="help-link" id="helpLink">Help</a>
+        </header>
+
+        <form class="registration-form" id="registrationForm">
+            <div class="progress-bar">
+                <div class="progress" id="progressBar"></div>
+            </div>
+
+            <!-- Step 1: Basic Details -->
+            <div class="step active" id="step1">
+                <h2>Create Your Laborer Profile</h2>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required>
+                    <button type="button" id="verifyPhone">Verify</button>
+                </div>
+                <div class="form-group">
+                    <label for="altPhone">Alternate Phone Number (Optional)</label>
+                    <input type="tel" id="altPhone" name="altPhone">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address (Optional)</label>
+                    <input type="email" id="email" name="email">
+                </div>
+            </div>
+
+            <!-- Step 2: Skill & Expertise -->
+            <div class="step" id="step2">
+                <h2>Tell Us About Your Skills</h2>
+                <div class="form-group">
+                    <label for="primarySkill">Primary Skill</label>
+                    <select id="primarySkill" name="primarySkill" required>
+                        <option value="">Select a skill</option>
+                        <option value="mason">Mason</option>
+                        <option value="carpenter">Carpenter</option>
+                        <option value="electrician">Electrician</option>
+                        <option value="plumber">Plumber</option>
+                        <option value="technician">Technician</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Secondary Skills</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="secondarySkills" value="painting"> Painting</label>
+                        <label><input type="checkbox" name="secondarySkills" value="welding"> Welding</label>
+                        <label><input type="checkbox" name="secondarySkills" value="gardening"> Gardening</label>
+                        <label><input type="checkbox" name="secondarySkills" value="cleaning"> Cleaning</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="experience">Years of Experience</label>
+                    <input type="number" id="experience" name="experience" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="workType">Type of Work Preferred</label>
+                    <select id="workType" name="workType" required>
+                        <option value="">Select work type</option>
+                        <option value="fullTime">Full-time</option>
+                        <option value="partTime">Part-time</option>
+                        <option value="freelance">Freelance</option>
+                        <option value="oneTime">One-time job</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="location">Location Preference</label>
+                    <input type="text" id="location" name="location" required>
+                </div>
+                <div class="form-group">
+                    <label for="bio">Bio (Optional)</label>
+                    <textarea id="bio" name="bio" rows="3"></textarea>
+                </div>
+            </div>
+
+            <!-- Step 3: Bank Details for UPI -->
+            <div class="step" id="step3">
+                <h2>Link Your UPI for Payment</h2>
+                <div class="form-group">
+                    <label for="accountNumber">Bank Account Number</label>
+                    <input type="text" id="accountNumber" name="accountNumber" required>
+                </div>
+                <div class="form-group">
+                    <label for="ifscCode">IFSC Code</label>
+                    <input type="text" id="ifscCode" name="ifscCode" required>
+                </div>
+                <div class="form-group">
+                    <label for="upiId">UPI ID</label>
+                    <input type="text" id="upiId" name="upiId" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmUpiId">Confirm UPI ID</label>
+                    <input type="text" id="confirmUpiId" name="confirmUpiId" required>
+                </div>
+                <p>Your UPI ID will be used for direct payments.</p>
+            </div>
+
+            <!-- Step 4: Identity Verification -->
+            <div class="step" id="step4">
+                <h2>Verify Your Identity</h2>
+                <div class="form-group">
+                    <label for="idType">ID Proof Type</label>
+                    <select id="idType" name="idType" required>
+                        <option value="">Select ID type</option>
+                        <option value="voterID">Voter ID</option>
+                        <option value="drivingLicense">Driving License</option>
+                        <option value="aadhar">Aadhar Card</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="idProof">Upload ID Proof</label>
+                    <div class="file-upload" id="idProofUpload">
+                        <span>Drag and drop or click to upload</span>
+                        <input type="file" id="idProof" name="idProof" accept="image/*" required>
+                    </div>
+                    <img id="idProofPreview" class="preview-image" src="" alt="ID Proof Preview" style="display: none;">
+                </div>
+                <div class="form-group">
+                    <label for="profilePhoto">Profile Photo (Optional)</label>
+                    <div class="file-upload" id="profilePhotoUpload">
+                        <span>Drag and drop or click to upload</span>
+                        <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*">
+                    </div>
+                    <img id="profilePhotoPreview" class="preview-image" src="" alt="Profile Photo Preview" style="display: none;">
+                </div>
+                <div class="form-group">
+                    <label for="currentLocation">Current Location</label>
+                    <input type="text" id="currentLocation" name="currentLocation" required>
+                    <button type="button" id="detectLocation">Detect Location</button>
+                </div>
+            </div>
+
+            <!-- Step 5: Group Feature Introduction -->
+            <div class="step" id="step5">
+                <h2>Join a Group or Lead One</h2>
+                <p>Laborer groups allow you to collaborate with others and access more job opportunities.</p>
+                <div class="form-group">
+                    <label for="groupCode">Join an Existing Group</label>
+                    <input type="text" id="groupCode" name="groupCode" placeholder="Enter group code">
+                </div>
+                <div class="form-group">
+                    <button type="button" id="scanQR">Scan QR Code</button>
+                </div>
+                <div class="form-group">
+                    <button type="button" id="createGroup">Create a New Group</button>
+                </div>
+                <p>Group leaders can bid for jobs and manage team assignments.</p>
+            </div>
+
+            <!-- Step 6: Final Details & Agreement -->
+            <div class="step" id="step6">
+                <h2>Final Steps</h2>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="termsAgreement" name="termsAgreement" required>
+                        I agree to the <a href="#" target="_blank">Terms and Conditions</a>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Notification Preferences</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="notifications" value="sms"> SMS Notifications</label>
+                        <label><input type="checkbox" name="notifications" value="email"> Email Notifications</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="emailOptIn" name="emailOptIn">
+                        Opt-in for Emails (Updates, tips, news)
+                    </label>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button type="button" id="prevBtn" class="btn-secondary">Previous</button>
+                <button type="button" id="nextBtn" class="btn-primary">Next</button>
+                <button type="button" id="submitBtn" class="btn-primary" style="display: none;">Submit</button>
+            </div>
+
+            <button type="button" id="saveProgress" class="btn-secondary">Save and Continue Later</button>
+        </form>
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('registrationForm');
+        const steps = document.querySelectorAll('.step');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const saveProgressBtn = document.getElementById('saveProgress');
+        const progressBar = document.getElementById('progressBar');
+
+        let currentStep = 0;
+
+        function showStep(stepIndex) {
+            steps.forEach((step, index) => {
+                step.classList.toggle('active', index === stepIndex);
+            });
+
+            prevBtn.style.display = stepIndex === 0 ? 'none' : 'inline-block';
+            nextBtn.style.display = stepIndex === steps.length - 1 ? 'none' : 'inline-block';
+            submitBtn.style.display = stepIndex === steps.length - 1 ? 'inline-block' : 'none';
+
+            updateProgressBar();
+        }
+
+        function updateProgressBar() {
+            const progress = ((currentStep + 1) / steps.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function validateStep(stepIndex) {
+            const currentStepElement = steps[stepIndex];
+            const inputs = currentStepElement.querySelectorAll('input, select, textarea');
+            let isValid = true;
+
+            inputs.forEach(input => {
+                if (input.hasAttribute('required') && !input.value.trim()) {
+                    isValid = false;
+                    showError(input, 'This field is required');
+                } else {
+                    clearError(input);
+                }
+            });
+
+            // Additional validation for specific steps
+            if (stepIndex === 0) {
+                const phoneInput = document.getElementById('phone');
+                if (phoneInput.value && !isValidPhone(phoneInput.value)) {
+                    isValid = false;
+                    showError(phoneInput, 'Please enter a valid phone number');
+                }
+            } else if (stepIndex === 2) {
+                const upiId = document.getElementById('upiId');
+                const confirmUpiId = document.getElementById('confirmUpiId');
+                if (upiId.value !== confirmUpiId.value) {
+                    isValid = false;
+                    showError(confirmUpiId, 'UPI IDs do not match');
+                }
+            }
+
+            return isValid;
+        }
+
+        function showError(input, message) {
+            const formGroup = input.closest('.form-group');
+            let errorElement = formGroup.querySelector('.error-message');
+            if (!errorElement) {
+                errorElement = document.createElement('div');
+                errorElement.className = 'error-message';
+                formGroup.appendChild(errorElement);
+            }
+            errorElement.textContent = message;
+            input.classList.add('error');
+        }
+
+        function clearError(input) {
+            const formGroup = input.closest('.form-group');
+            const errorElement = formGroup.querySelector('.error-message');
+            if (errorElement) {
+                errorElement.remove();
+            }
+            input.classList.remove('error');
+        }
+
+        function isValidPhone(phone) {
+            // Basic phone number validation (can be improved based on specific requirements)
+            return /^\d{10}$/.test(phone);
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (validateStep(currentStep)) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentStep--;
+            showStep(currentStep);
+        });
+
+        submitBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (validateStep(currentStep)) {
+                // Perform final form submission
+                alert('Form submitted successfully!');
+                // You can add AJAX call here to submit the form data to the server
+            }
+        });
+
+        saveProgressBtn.addEventListener('click', () => {
+            // Save form data to local storage
+            const formData = new FormData(form);
+            const formObject = Object.fromEntries(formData.entries());
+            localStorage.setItem('laborRegistrationForm', JSON.stringify(formObject));
+            alert('Your progress has been saved. You can continue later.');
+        });
+
+        // Load saved progress if available
+        const savedProgress = localStorage.getItem('laborRegistrationForm');
+        if (savedProgress) {
+            const savedData = JSON.parse(savedProgress);
+            Object.keys(savedData).forEach(key => {
+                const input = form.elements[key];
+                if (input) {
+                    input.value = savedData[key];
+                }
+            });
+        }
+
+        // Phone number verification
+        const verifyPhoneBtn = document.getElementById('verifyPhone');
+        verifyPhoneBtn.addEventListener('click', () => {
+            const phoneInput = document.getElementById('phone');
+            if (isValidPhone(phoneInput.value)) {
+                // Simulate OTP sending (replace with actual API call)
+                alert('OTP sent to your phone number. Please enter it to verify.');
+                const otp = prompt('Enter the OTP:');
+                if (otp) {
+                    // Simulate OTP verification (replace with actual API call)
+                    alert('Phone number verified successfully!');
+                    phoneInput.setAttribute('readonly', true);
+                    verifyPhoneBtn.disabled = true;
+                }
+            } else {
+                showError(phoneInput, 'Please enter a valid phone number');
+            }
+        });
+
+        // File upload preview
+        function handleFileUpload(inputId, previewId) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            const fileUpload = input.closest('.file-upload');
+
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                        fileUpload.style.display = 'none';
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            fileUpload.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileUpload.classList.add('dragover');
+            });
+
+            fileUpload.addEventListener('dragleave', () => {
+                fileUpload.classList.remove('dragover');
+            });
+
+            fileUpload.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileUpload.classList.remove('dragover');
+                input.files = e.dataTransfer.files;
+                input.dispatchEvent(new Event('change'));
+            });
+        }
+
+        handleFileUpload('idProof', 'idProofPreview');
+        handleFileUpload('profilePhoto', 'profilePhotoPreview');
+
+        // Geolocation
+        const detectLocationBtn = document.getElementById('detectLocation');
+        detectLocationBtn.addEventListener('click', () => {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    document.getElementById('currentLocation').value = `Lat: ${lat}, Lon: ${lon}`;
+                    // You can use a reverse geocoding API here to get a human-readable address
+                });
+            } else {
+                alert("Geolocation is not supported by your browser");
+            }
+        });
+
+        // Group creation
+        const createGroupBtn = document.getElementById('createGroup');
+        createGroupBtn.addEventListener('click', () => {
+            const groupName = prompt('Enter a name for your new group:');
+            if (groupName) {
+                // Simulate group creation (replace with actual API call)
+                const groupCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+                alert(`Group "${groupName}" created successfully! Your group code is: ${groupCode}`);
+                
+                // Generate QR code for the group
+                const qr = new QRCode(document.createElement("div"), {
+                    text: groupCode,
+                    width: 128,
+                    height: 128
+                });
+                
+                const qrImage = qr._el.firstChild;
+                const blob = new Blob([qrImage.outerHTML], {type: 'image/svg+xml'});
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "group-qr-code.svg";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        });
+
+        // QR code scanner (placeholder - actual implementation would require a library or API)
+        const scanQRBtn = document.getElementById('scanQR');
+        scanQRBtn.addEventListener('click', () => {
+            alert('QR code scanning functionality would be implemented here. This typically requires access to the device camera and a QR code scanning library.');
+        });
+
+        // Initialize the form
+        showStep(currentStep);
+    });
+</script>
+</body>
+</html>

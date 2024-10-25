@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in to Your Laborer Account</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #F9F9F9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00978A;
+        }
+
+        .help-link {
+            color: #465FA2;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 0.5rem;
+            text-align: center;
+            background-color: #f0f0f0;
+            cursor: pointer;
+            border: none;
+            outline: none;
+        }
+
+        .tab.active {
+            background-color: #00978A;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            background-color: #00978A;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #007A6E;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .error {
+            color: #ff0000;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+        }
+
+        footer a {
+            color: #465FA2;
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+
+        .help-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #465FA2;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+
+            input, button {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">LaborConnect</div>
+            <a href="#" class="help-link" id="helpLink">Help</a>
+        </header>
+        <h1>Log in to Your Laborer Account</h1>
+        <p class="subtitle">Access your account, check jobs, and get paid!</p>
+        
+        <div class="tabs">
+            <button class="tab active" id="otpTab">Login with OTP</button>
+            <button class="tab" id="passwordTab">Login with Password</button>
+        </div>
+
+        <form id="otpForm">
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number</label>
+                <input type="tel" id="phoneNumber" placeholder="Enter your registered mobile number" required>
+                <div class="error" id="phoneError"></div>
+            </div>
+            <button type="button" id="sendOtpBtn">Send OTP</button>
+            <div class="form-group" id="otpGroup" style="display: none;">
+                <label for="otp">OTP</label>
+                <input type="text" id="otp" placeholder="Enter the 6-digit OTP sent to your phone" maxlength="6" required>
+                <div class="error" id="otpError"></div>
+            </div>
+            <button type="submit" id="loginOtpBtn" style="display: none;">Log In</button>
+        </form>
+
+        <form id="passwordForm" style="display: none;">
+            <div class="form-group">
+                <label for="emailOrPhone">Phone Number or Email</label>
+                <input type="text" id="emailOrPhone" placeholder="Enter your registered phone number or email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div style="position: relative;">
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                    <button type="button" class="password-toggle" id="passwordToggle">👁️</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <a href="#" id="forgotPassword">Forgot Password?</a>
+            </div>
+            <button type="submit">Log In</button>
+        </form>
+    </div>
+
+    <footer>
+        <a href="#">Terms and Conditions</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Contact Us</a>
+    </footer>
+
+    <button class="help-button" id="helpButton">?</button>
+
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Login Help</h2>
+            <p>If you're having trouble logging in, please try the following:</p>
+            <ul>
+                <li>Make sure you're using the correct phone number or email address.</li>
+                <li>If using OTP, ensure you enter the code within 5 minutes of receiving it.</li>
+                <li>Check your network connection and try again.</li>
+                <li>If you've forgotten your password, use the "Forgot Password" link to reset it.</li>
+                <li>For further assistance, please contact our support team.</li>
+            </ul>
+        </div>
+    </div>
+
+
+<script>
+    // DOM Elements
+    const otpTab = document.getElementById('otpTab');
+    const passwordTab = document.getElementById('passwordTab');
+    const otpForm = document.getElementById('otpForm');
+    const passwordForm = document.getElementById('passwordForm');
+    const phoneNumber = document.getElementById('phoneNumber');
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+    const otpGroup = document.getElementById('otpGroup');
+    const otp = document.getElementById('otp');
+    const loginOtpBtn = document.getElementById('loginOtpBtn');
+    const phoneError = document.getElementById('phoneError');
+    const otpError = document.getElementById('otpError');
+    const passwordToggle = document.getElementById('passwordToggle');
+    const password = document.getElementById('password');
+    const forgotPassword = document.getElementById('forgotPassword');
+    const helpLink = document.getElementById('helpLink');
+    const helpButton = document.getElementById('helpButton');
+    const helpModal = document.getElementById('helpModal');
+    const closeModalBtn = document.querySelector('.close');
+
+    // Tab switching
+    otpTab.addEventListener('click', () => {
+        otpTab.classList.add('active');
+        passwordTab.classList.remove('active');
+        otpForm.style.display = 'block';
+        passwordForm.style.display = 'none';
+    });
+
+    passwordTab.addEventListener('click', () => {
+        passwordTab.classList.add('active');
+        otpTab.classList.remove('active');
+        passwordForm.style.display = 'block';
+        otpForm.style.display = 'none';
+    });
+
+    // Phone number validation
+    function validatePhoneNumber(phone) {
+        const phoneRegex = /^\d{10}$/;
+        return phoneRegex.test(phone);
+    }
+
+    phoneNumber.addEventListener('input', () => {
+        if (!validatePhoneNumber(phoneNumber.value)) {
+            phoneError.textContent = 'Please enter a valid 10-digit phone number';
+        } else {
+            phoneError.textContent = '';
+        }
+    });
+
+    // Send OTP functionality
+    let otpSent = false;
+    let resendTimer;
+
+    sendOtpBtn.addEventListener('click', () => {
+        if (!validatePhoneNumber(phoneNumber.value)) {
+            phoneError.textContent = 'Please enter a valid 10-digit phone number';
+            return;
+        }
+
+        // Simulate OTP sending (replace with actual API call)
+        setTimeout(() => {
+            otpGroup.style.display = 'block';
+            loginOtpBtn.style.display = 'block';
+            otpSent = true;
+            sendOtpBtn.textContent = 'Resend OTP';
+            sendOtpBtn.disabled = true;
+            startResendTimer();
+        }, 1000);
+    });
+
+    function startResendTimer() {
+        let seconds = 60;
+        resendTimer = setInterval(() => {
+            if (seconds > 0) {
+                sendOtpBtn.textContent = `Resend OTP (${seconds}s)`;
+                seconds--;
+            } else {
+                clearInterval(resendTimer);
+                sendOtpBtn.textContent = 'Resend OTP';
+                sendOtpBtn.disabled = false;
+            }
+        }, 1000);
+    }
+
+    // OTP validation
+    otp.addEventListener('input', () => {
+        if (otp.value.length === 6) {
+            // Simulate OTP validation (replace with actual validation)
+            if (otp.value === '123456') {
+                otpError.textContent = '';
+                loginOtpBtn.disabled = false;
+            } else {
+                otpError.textContent = 'Invalid OTP. Please try again.';
+                loginOtpBtn.disabled = true;
+            }
+        } else {
+            loginOtpBtn.disabled = true;
+        }
+    });
+
+    // Login with OTP
+    otpForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (otpSent && otp.value.length === 6) {
+            // Simulate login (replace with actual login logic)
+            alert('Login successful!');
+        }
+    });
+
+    // Password toggle
+    passwordToggle.addEventListener('click', () => {
+        if (password.type === 'password') {
+            password.type = 'text';
+            passwordToggle.textContent = '👁️‍🗨️';
+        } else {
+            password.type = 'password';
+            passwordToggle.textContent = '👁️';
+        }
+    });
+
+    // Forgot password
+    forgotPassword.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Implement forgot password logic here
+        alert('Forgot password functionality will be implemented here.');
+    });
+
+    // Login with password
+    passwordForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        // Implement password-based login logic here
+        alert('Password-based login functionality will be implemented here.');
+    });
+
+    // Help modal
+    function openModal() {
+        helpModal.style.display = 'block';
+    }
+
+    function closeModal() {
+        helpModal.style.display = 'none';
+    }
+
+    helpLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal();
+    });
+
+    helpButton.addEventListener('click', openModal);
+
+    closeModalBtn.addEventListener('click', closeModal);
+
+    window.addEventListener('click', (e) => {
+        if (e.target === helpModal) {
+            closeModal();
+        }
+    });
+</script>
+</body>
+</html>

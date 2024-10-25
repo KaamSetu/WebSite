@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groups Page</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+
+        /* Layout */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Header styles */
+        header {
+            background-color: #fff;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00978A;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 1rem;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .search-bar input {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        /* Left pane styles */
+        .left-pane {
+            width: 250px;
+            background-color: #fff;
+            padding: 1rem;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100%;
+            top: 60px;
+        }
+
+        .left-pane ul {
+            list-style: none;
+        }
+
+        .left-pane ul li {
+            margin-bottom: 1rem;
+        }
+
+        .left-pane ul li a {
+            text-decoration: none;
+            color: #333;
+            display: block;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .left-pane ul li a:hover,
+        .left-pane ul li a.active {
+            background-color: #00978A;
+            color: #fff;
+        }
+
+        /* Main content styles */
+        .main-content {
+            flex-grow: 1;
+            padding: 2rem;
+            margin-left: 250px;
+            margin-top: 60px;
+        }
+
+        /* Group overview styles */
+        .group-overview {
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .group-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .group-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #465FA2;
+        }
+
+        .group-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .status-active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .status-inactive {
+            background-color: #F44336;
+            color: white;
+        }
+
+        .group-leader {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .group-leader img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 1rem;
+        }
+
+        .members-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .member {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .member img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+        }
+
+        .group-actions {
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #00978A;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #465FA2;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #F44336;
+            color: white;
+        }
+
+        /* Join/Create group styles */
+        .join-create-group {
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .search-filter {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-filter input,
+        .search-filter select {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .group-list {
+            list-style: none;
+        }
+
+        .group-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .create-group-form {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .create-group-form input,
+        .create-group-form textarea,
+        .create-group-form select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 1rem;
+            top: 0.5rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Footer styles */
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+
+        footer a {
+            color: #fff;
+            margin: 0 0.5rem;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .left-pane {
+                width: 100%;
+                position: static;
+                height: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .search-filter {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">JobBoard</div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="#">Profile</a></li>
+                </ul>
+            </nav>
+            <div class="search-bar">
+                <input type="text" placeholder="Search...">
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="left-pane">
+            <ul>
+                <li><a href="labor-dashboard.html">Dashboard</a></li>
+                <li><a href="labor-availableJobs.html">Available Jobs</a></li>
+                <li><a href="labor-payment.html">Payments</a></li>
+                <li><a href="labor-group.html" class="active">Groups</a></li>
+                <li><a href="labor-pastJob.html">Past Jobs</a></li>
+                <li><a href="labor-profile.html">My Profile</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <h1>Groups</h1>
+            <div class="group-overview">
+                <div class="group-info">
+                    <h2 class="group-name">Skilled Builders</h2>
+                    <span class="group-status status-active">Active</span>
+                </div>
+                <div class="group-leader">
+                    <img src="/api/placeholder/50/50" alt="Group Leader">
+                    <span>Group Leader: John Doe</span>
+                </div>
+                <h3>Members:</h3>
+                <div class="members-list" id="members-list">
+                    <!-- Members will be dynamically populated here -->
+                </div>
+                <div class="group-actions">
+                    <button class="btn btn-primary" id="view-group-details">View Group Details</button>
+                    <button class="btn btn-danger" id="leave-group">Leave Group</button>
+                </div>
+            </div>
+
+            <div class="join-create-group">
+                <h2>Join a Group</h2>
+                <div class="search-filter">
+                    <input type="text" id="group-search" placeholder="Search groups...">
+                    <select id="skill-filter">
+                        <option value="">All Skills</option>
+                        <option value="construction">Construction</option>
+                        <option value="plumbing">Plumbing</option>
+                        <option value="electrical">Electrical</option>
+                    </select>
+                    <select id="location-filter">
+                        <option value="">All Locations</option>
+                        <option value="new-york">New York</option>
+                        <option value="los-angeles">Los Angeles</option>
+                        <option value="chicago">Chicago</option>
+                    </select>
+                </div>
+                <ul class="group-list" id="group-list">
+                    <!-- Available groups will be dynamically populated here -->
+                </ul>
+            </div>
+
+            <div class="join-create-group">
+                <h2>Create a New Group</h2>
+                <form id="create-group-form" class="create-group-form">
+                    <input type="text" id="group-name" placeholder="Group Name" required>
+                    <textarea id="group-description" placeholder="Group Description" required></textarea>
+                    <input type="text" id="group-location" placeholder="Primary Location" required>
+                    <select id="group-skills" multiple required>
+                        <option value="construction">Construction</option>
+                        <option value="plumbing">Plumbing</option>
+                        <option value="electrical">Electrical</option>
+                        <option value="carpentry">Carpentry</option>
+                    </select>
+                    <input type="text" id="invite-members" placeholder="Invite Members (comma-separated phone numbers)">
+                    <button type="submit" class="btn btn-primary">Create Group</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="group-details-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Group Details</h2>
+            <div id="group-details-content">
+                <!-- Group details will be dynamically populated here -->
+            </div>
+            <div id="group-management" style="display: none;">
+                <h3>Manage Members</h3>
+                <ul id="manage-members-list"></ul>
+                <h3>Assign Jobs</h3>
+                <select id="job-assignment-select"></select>
+                <select id="member-assignment-select"></select>
+                <button id="assign-job" class="btn btn-primary">Assign Job</button>
+                <h3>Bid for Jobs</h3>
+                <select id="job-bid-select"></select>
+                <input type="number" id="bid-amount" placeholder="Bid Amount">
+                <button id="submit-bid" class="btn btn-primary">Submit Bid</button>
+            </div>
+            <button id="nominate-leader" class="btn btn-secondary">Nominate New Leader</button>
+        </div>
+    </div>
+
+    <div id="confirm-leave-modal" class="modal">
+        <div class="modal-content">
+            <h2>Confirm Leave Group</h2>
+            <p>Are you sure you want to leave this group?</p>
+            <button id="confirm-leave" class="btn btn-danger">Yes, Leave Group</button>
+            <button id="cancel-leave" class="btn btn-secondary">Cancel</button>
+        </div>
+    </div>
+
+    <footer>
+        <a href="#">About Us</a>
+        <a href="#">Terms and Conditions</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Contact Us</a>
+        <div class="social-media">
+            <!-- Add social media icons here -->
+        </div>
+    </footer>
+
+    <script>
+        // Sample data for groups and members
+    const currentGroup = {
+        name: "Skilled Builders",
+        leader: "John Doe",
+        status: "Active",
+        members: [
+            { name: "John Doe", image: "/api/placeholder/40/40" },
+            { name: "Jane Smith", image: "/api/placeholder/40/40" },
+            { name: "Bob Johnson", image: "/api/placeholder/40/40" },
+            // Add more members as needed
+        ]
+    };
+
+    const availableGroups = [
+        { name: "Plumbing Pros", skill: "plumbing", location: "New York" },
+        { name: "Electrical Experts", skill: "electrical", location: "Los Angeles" },
+        { name: "Carpentry Crew", skill: "carpentry", location: "Chicago" },
+        // Add more groups as needed
+    ];
+
+    // Function to populate current group members
+    function populateMembers() {
+        const membersList = document.getElementById('members-list');
+        membersList.innerHTML = '';
+        currentGroup.members.forEach(member => {
+            const memberElement = document.createElement('div');
+            memberElement.classList.add('member');
+            memberElement.innerHTML = `
+                <img src="${member.image}" alt="${member.name}">
+                <span>${member.name}</span>
+            `;
+            membersList.appendChild(memberElement);
+        });
+    }
+
+    // Function to populate available groups
+    function populateAvailableGroups() {
+        const groupList = document.getElementById('group-list');
+        groupList.innerHTML = '';
+        availableGroups.forEach(group => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span>${group.name} (${group.skill} - ${group.location})</span>
+                <button class="btn btn-primary join-group" data-group="${group.name}">Join</button>
+            `;
+            groupList.appendChild(li);
+        });
+
+        // Add event listeners to join buttons
+        document.querySelectorAll('.join-group').forEach(button => {
+            button.addEventListener('click', function() {
+                const groupName = this.getAttribute('data-group');
+                alert(`Requesting to join ${groupName}`);
+                // Here you would typically send a request to your backend
+            });
+        });
+    }
+
+    // Function to filter available groups
+    function filterGroups() {
+        const searchTerm = document.getElementById('group-search').value.toLowerCase();
+        const skillFilter = document.getElementById('skill-filter').value.toLowerCase();
+        const locationFilter = document.getElementById('location-filter').value.toLowerCase();
+
+        const filteredGroups = availableGroups.filter(group => {
+            const nameMatch = group.name.toLowerCase().includes(searchTerm);
+            const skillMatch = !skillFilter || group.skill.toLowerCase() === skillFilter;
+            const locationMatch = !locationFilter || group.location.toLowerCase() === locationFilter;
+            return nameMatch && skillMatch && locationMatch;
+        });
+
+        const groupList = document.getElementById('group-list');
+        groupList.innerHTML = '';
+        filteredGroups.forEach(group => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span>${group.name} (${group.skill} - ${group.location})</span>
+                <button class="btn btn-primary join-group" data-group="${group.name}">Join</button>
+            `;
+            groupList.appendChild(li);
+        });
+    }
+
+    // Function to handle group creation
+    function createGroup(event) {
+        event.preventDefault();
+        const groupName = document.getElementById('group-name').value;
+        const groupDescription = document.getElementById('group-description').value;
+        const groupLocation = document.getElementById('group-location').value;
+        const groupSkills = Array.from(document.getElementById('group-skills').selectedOptions).map(option => option.value);
+        const inviteMembers = document.getElementById('invite-members').value.split(',').map(number => number.trim());
+
+        // Here you would typically send this data to your backend
+        console.log('Creating group:', { groupName, groupDescription, groupLocation, groupSkills, inviteMembers });
+        alert(`Group "${groupName}" created successfully!`);
+
+        // Clear the form
+        event.target.reset();
+    }
+
+    // Function to show group details modal
+    function showGroupDetails() {
+        const modal = document.getElementById('group-details-modal');
+        const content = document.getElementById('group-details-content');
+        content.innerHTML = `
+            <h3>${currentGroup.name}</h3>
+            <p>Leader: ${currentGroup.leader}</p>
+            <p>Status: ${currentGroup.status}</p>
+            <h4>Members:</h4>
+            <ul>
+                ${currentGroup.members.map(member => `<li>${member.name}</li>`).join('')}
+            </ul>
+        `;
+        modal.style.display = 'block';
+
+        // Show group management options if the user is the group leader
+        const groupManagement = document.getElementById('group-management');
+        groupManagement.style.display = currentGroup.leader === "John Doe" ? 'block' : 'none';
+    }
+
+    // Function to handle leaving group
+    function leaveGroup() {
+        const modal = document.getElementById('confirm-leave-modal');
+        modal.style.display = 'block';
+    }
+
+    // Function to confirm leaving group
+    function confirmLeaveGroup() {
+        // Here you would typically send a request to your backend to leave the group
+        alert('You have left the group.');
+        document.getElementById('confirm-leave-modal').style.display = 'none';
+        // Redirect to a page or update the UI to reflect that the user is no longer in a group
+    }
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+        populateMembers();
+        populateAvailableGroups();
+
+        document.getElementById('group-search').addEventListener('input', filterGroups);
+        document.getElementById('skill-filter').addEventListener('change', filterGroups);
+        document.getElementById('location-filter').addEventListener('change', filterGroups);
+
+        document.getElementById('create-group-form').addEventListener('submit', createGroup);
+
+        document.getElementById('view-group-details').addEventListener('click', showGroupDetails);
+        document.getElementById('leave-group').addEventListener('click', leaveGroup);
+
+        document.getElementById('confirm-leave').addEventListener('click', confirmLeaveGroup);
+        document.getElementById('cancel-leave').addEventListener('click', () => {
+            document.getElementById('confirm-leave-modal').style.display = 'none';
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (event) => {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        });
+
+        // Close buttons for modals
+        document.querySelectorAll('.close').forEach(closeButton => {
+            closeButton.addEventListener('click', () => {
+                closeButton.closest('.modal').style.display = 'none';
+            });
+        });
+
+        // Nominate new leader
+        document.getElementById('nominate-leader').addEventListener('click', () => {
+            const newLeader = prompt('Enter the name of the member you want to nominate as the new leader:');
+            if (newLeader) {
+                alert(`You have nominated ${newLeader} as the new leader. Waiting for confirmation.`);
+                // Here you would typically send this nomination to your backend
+            }
+        });
+
+        // Assign job (for group leader)
+        document.getElementById('assign-job').addEventListener('click', () => {
+            const job = document.getElementById('job-assignment-select').value;
+            const member = document.getElementById('member-assignment-select').value;
+            if (job && member) {
+                alert(`Job "${job}" has been assigned to ${member}.`);
+                // Here you would typically send this assignment to your backend
+            } else {
+                alert('Please select both a job and a member.');
+            }
+        });
+
+        // Submit bid (for group leader)
+        document.getElementById('submit-bid').addEventListener('click', () => {
+            const job = document.getElementById('job-bid-select').value;
+            const amount = document.getElementById('bid-amount').value;
+            if (job && amount) {
+                alert(`Bid of $${amount} submitted for job "${job}".`);
+                // Here you would typically send this bid to your backend
+            } else {
+                alert('Please select a job and enter a bid amount.');
+            }
+        });
+    });
+</script>
+</body>
+</html>

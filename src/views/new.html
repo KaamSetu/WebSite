@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KaamSetu - Client Profile</title>
+    <style>
+        :root {
+    --primary-color: #00978A;
+    --secondary-color: #465FA2;
+    --background-color: #f4f4f4;
+    --text-color: #333;
+    --border-color: #ddd;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+/* Header Styles */
+header {
+    background-color: #fff;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo img {
+    height: 40px;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+}
+
+nav ul li {
+    margin-right: 1rem;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+}
+
+.notifications {
+    position: relative;
+    margin-right: 1rem;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem;
+}
+
+.profile-dropdown {
+    position: relative;
+    cursor: pointer;
+}
+
+.profile-dropdown img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: var(--text-color);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.profile-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Main Content Styles */
+main {
+    display: flex;
+    margin-top: 2rem;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #fff;
+    padding: 1rem;
+    height: calc(100vh - 80px);
+    position: fixed;
+    overflow-y: auto;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar ul li {
+    margin-bottom: 1rem;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+}
+
+.sidebar ul li a i {
+    margin-right: 0.5rem;
+}
+
+.content {
+    flex: 1;
+    margin-left: 270px;
+    padding: 2rem;
+}
+
+section {
+    background-color: #fff;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+}
+
+/* Profile Information Styles */
+.profile-picture {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.profile-picture img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+}
+
+#change-picture {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.edit-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+}
+
+/* Account Management Styles */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: var(--primary-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.visibility-status {
+    margin-left: 0.5rem;
+}
+
+.tooltip-trigger {
+    cursor: pointer;
+    margin-left: 0.5rem;
+}
+
+/* Job Preferences Styles */
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+/* Reviews & Ratings Styles */
+.reviews-container {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.review-item {
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0;
+}
+
+.review-item:last-child {
+    border-bottom: none;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.review-author img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+.star-rating {
+    color: gold;
+}
+
+/* Payment Information Styles */
+#payment-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#payment-table th,
+#payment-table td {
+    padding: 0.5rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+#payment-table th {
+    background-color: #f1f1f1;
+}
+
+/* Help & Support Styles */
+.faq-list {
+    margin-top: 1rem;
+}
+
+.faq-item {
+    margin-bottom: 1rem;
+}
+
+.faq-question {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.faq-answer {
+    margin-top: 0.5rem;
+    display: none;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 2rem;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 500px;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #fff;
+    padding: 1rem;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.footer-links a {
+    margin: 0 1rem;
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+    }
+
+    nav ul {
+        margin-top: 1rem;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+    }
+
+    .content {
+        margin-left: 0;
+    }
+
+    .checkbox-group {
+        flex-direction: column;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.form-group input:focus + label,
+.form-group input:not(:placeholder-shown) + label {
+    transform: translateY(-20px);
+    font-size: 0.8rem;
+    color: var(--primary-color);
+}
+
+.form-group input,
+.form-group label {
+    transition: all 0.3s ease;
+}
+
+.edit-btn:hover,
+#change-picture:hover,
+#contact-us:hover {
+    opacity: 0.8;
+}
+
+.faq-question:hover {
+    color: var(--primary-color);
+}
+
+.review-item,
+.faq-item {
+    animation: fadeIn 0.5s ease-in-out;
+}
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/"><img src="kaamsetu-logo.png" alt="Kaamsetu Logo"></a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/post-job">Post a Job</a></li>
+                <li><a href="/all-jobs">All Jobs</a></li>
+                <li><a href="/payments">Payments</a></li>
+                <li><a href="/profile">Profile Settings</a></li>
+            </ul>
+        </nav>
+        <div class="user-menu">
+            <div class="notifications">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </div>
+            <div class="profile-dropdown">
+                <img src="profile-picture.jpg" alt="User Profile">
+                <span>John Doe</span>
+                <div class="dropdown-content">
+                    <a href="/logout">Log Out</a>
+                    <a href="/switch-profile">Switch to Business Profile</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li><a href="#profile-info"><i class="fas fa-user"></i> Profile Information</a></li>
+                    <li><a href="#account-management"><i class="fas fa-cog"></i> Account Management</a></li>
+                    <li><a href="#job-preferences"><i class="fas fa-briefcase"></i> Job Preferences</a></li>
+                    <li><a href="#reviews-ratings"><i class="fas fa-star"></i> Reviews & Ratings</a></li>
+                    <li><a href="#payment-info"><i class="fas fa-credit-card"></i> Payment Information</a></li>
+                    <li><a href="#help-support"><i class="fas fa-question-circle"></i> Help & Support</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="content">
+            <section id="profile-info">
+                <h2>Profile Information</h2>
+                <div class="profile-picture">
+                    <img src="profile-picture.jpg" alt="Profile Picture" id="profile-image">
+                    <button id="change-picture">Change Profile Picture</button>
+                    <input type="file" id="picture-upload" accept="image/*" style="display: none;">
+                </div>
+                <div class="basic-info">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" value="John Doe">
+                        <button class="edit-btn">Edit</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contact Number</label>
+                        <input type="tel" id="contact" name="contact" value="+91 9876543210">
+                        <button class="edit-btn">Edit</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" name="address" value="123 Main St, Mumbai, India">
+                        <button class="edit-btn">Edit</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" value="john.doe@example.com">
+                        <button class="edit-btn">Edit</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="account-management">
+                <h2>Account Management</h2>
+                <div class="username-management">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" value="johndoe123">
+                    <button id="change-username">Change Username</button>
+                </div>
+                <div class="password-management">
+                    <button id="change-password">Change Password</button>
+                </div>
+                <div class="profile-visibility">
+                    <label for="visibility-toggle">Profile Visibility</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="visibility-toggle">
+                        <span class="slider round"></span>
+                    </div>
+                    <span class="visibility-status">Public</span>
+                    <i class="fas fa-question-circle tooltip-trigger" data-tooltip="Public: Your profile is visible to laborers and engineers. Private: Your profile is hidden."></i>
+                </div>
+            </section>
+
+            <section id="job-preferences">
+                <h2>Job Preferences</h2>
+                <div class="job-types">
+                    <h3>Preferred Job Types</h3>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="job-type" value="plumbing"> Plumbing</label>
+                        <label><input type="checkbox" name="job-type" value="electrical"> Electrical</label>
+                        <label><input type="checkbox" name="job-type" value="carpentry"> Carpentry</label>
+                        <label><input type="checkbox" name="job-type" value="painting"> Painting</label>
+                        <label><input type="checkbox" name="job-type" value="general-labor"> General Labor</label>
+                    </div>
+                    <button id="select-all-jobs">Select All</button>
+                    <button id="clear-job-selection">Clear Selection</button>
+                </div>
+                <div class="communication-preference">
+                    <h3>Preferred Communication Method</h3>
+                    <select id="comm-method">
+                        <option value="sms">SMS</option>
+                        <option value="email">Email</option>
+                        <option value="app">App Notifications</option>
+                    </select>
+                </div>
+            </section>
+
+            <section id="reviews-ratings">
+                <h2>Reviews & Ratings</h2>
+                <div class="sort-options">
+                    <label for="sort-reviews">Sort by:</label>
+                    <select id="sort-reviews">
+                        <option value="recent">Most Recent</option>
+                        <option value="highest">Highest Rated</option>
+                        <option value="lowest">Lowest Rated</option>
+                    </select>
+                </div>
+                <div class="reviews-container">
+                    <!-- Review items will be dynamically added here -->
+                </div>
+            </section>
+
+            <section id="payment-info">
+                <h2>Payment Information</h2>
+                <div class="bank-details">
+                    <h3>Bank Account Details</h3>
+                    <div class="form-group">
+                        <label for="bank-name">Bank Name</label>
+                        <input type="text" id="bank-name" name="bank-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="account-number">Account Number</label>
+                        <input type="text" id="account-number" name="account-number">
+                    </div>
+                    <div class="form-group">
+                        <label for="ifsc-code">IFSC Code</label>
+                        <input type="text" id="ifsc-code" name="ifsc-code">
+                    </div>
+                    <div class="form-group">
+                        <label for="upi-id">UPI ID (Optional)</label>
+                        <input type="text" id="upi-id" name="upi-id">
+                    </div>
+                </div>
+                <div class="payment-history">
+                    <h3>Payment History</h3>
+                    <table id="payment-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Job ID</th>
+                                <th>Laborer's Name</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Payment history rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="help-support">
+                <h2>Help & Support</h2>
+                <div class="faq-section">
+                    <h3>Frequently Asked Questions</h3>
+                    <input type="text" id="faq-search" placeholder="Search FAQs...">
+                    <div class="faq-list">
+                        <!-- FAQ items will be dynamically added here -->
+                    </div>
+                </div>
+                <div class="contact-support">
+                    <h3>Contact Support</h3>
+                    <button id="contact-us">Contact Us</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="/terms">Terms & Conditions</a>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/help">Help Center</a>
+        </div>
+        <div class="contact-details">
+            <p>Support: support@kaamsetu.com</p>
+            <p>Phone: +91 1800 123 4567</p>
+        </div>
+    </footer>
+
+    <!-- Modal templates -->
+    <div id="password-change-modal" class="modal">
+        <div class="modal-content">
+            <h2>Change Password</h2>
+            <form id="password-change-form">
+                <div class="form-group">
+                    <label for="current-password">Current Password</label>
+                    <input type="password" id="current-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="new-password">New Password</label>
+                    <input type="password" id="new-password" required>
+                    <div id="password-strength-meter"></div>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm New Password</label>
+                    <input type="password" id="confirm-password" required>
+                </div>
+                <button type="submit">Change Password</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="contact-modal" class="modal">
+        <div class="modal-content">
+            <h2>Contact Support</h2>
+            <form id="contact-form">
+                <div class="form-group">
+                    <label for="support-category">Category</label>
+                    <select id="support-category" required>
+                        <option value="">Select a category</option>
+                        <option value="account">Account Issue</option>
+                        <option value="payment">Payment Issue</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="support-message">Description</label>
+                    <textarea id="support-message" required></textarea>
+                </div>
+                <button type="submit">Submit Query</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    // Profile Picture Upload
+    const profilePicture = document.getElementById('profile-image');
+    const changeProfilePicture = document.getElementById('change-picture');
+    const fileUpload = document.getElementById('picture-upload');
+
+    changeProfilePicture.addEventListener('click', () => fileUpload.click());
+
+    fileUpload.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                profilePicture.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert('Please select a valid image file.');
+        }
+    });
+
+    // Edit buttons functionality
+    const editButtons = document.querySelectorAll('.edit-btn');
+    editButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const inputField = this.previousElementSibling;
+            inputField.readOnly = !inputField.readOnly;
+            this.textContent = inputField.readOnly ? 'Edit' : 'Save';
+            
+            if (inputField.readOnly) {
+                // Simulating an AJAX request to save data
+                console.log(`Saving ${inputField.name}: ${inputField.value}`);
+                // Here you would typically send an AJAX request to your server
+            }
+        });
+    });
+
+    // Geolocation for address
+    const addressField = document.getElementById('address');
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            // Here you would typically use a geocoding service to get the address
+            // For demonstration, we'll just set the coordinates
+            addressField.value = `Lat: ${lat}, Lon: ${lon}`;
+        });
+    }
+
+    // Username change
+    const changeUsername = document.getElementById('change-username');
+    const usernameField = document.getElementById('username');
+
+    changeUsername.addEventListener('click', function() {
+        const newUsername = prompt("Enter new username:");
+        if (newUsername) {
+            // Simulating an AJAX request to check username availability
+            setTimeout(() => {
+                // Assume the username is available
+                usernameField.value = newUsername;
+                alert("Username changed successfully!");
+            }, 1000);
+        }
+    });
+
+    // Password change modal
+    const changePasswordBtn = document.getElementById('change-password');
+    const passwordModal = document.getElementById('password-change-modal');
+    const passwordForm = document.getElementById('password-change-form');
+
+    changePasswordBtn.addEventListener('click', () => passwordModal.style.display = 'block');
+
+    passwordForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        // Here you would typically validate the password and send an AJAX request
+        alert("Password changed successfully!");
+        passwordModal.style.display = 'none';
+    });
+
+    // Password strength meter
+    const newPasswordField = document.getElementById('new-password');
+    const strengthMeter = document.getElementById('password-strength-meter');
+
+    newPasswordField.addEventListener('input', function() {
+        const strength = calculatePasswordStrength(this.value);
+        strengthMeter.style.width = `${strength}%`;
+        strengthMeter.style.backgroundColor = getStrengthColor(strength);
+    });
+
+    function calculatePasswordStrength(password) {
+        // This is a simple example. In a real application, you'd want a more robust check.
+        let strength = 0;
+        if (password.length > 6) strength += 20;
+        if (password.match(/[a-z]+/)) strength += 20;
+        if (password.match(/[A-Z]+/)) strength += 20;
+        if (password.match(/[0-9]+/)) strength += 20;
+        if (password.match(/[$@#&!]+/)) strength += 20;
+        return strength;
+    }
+
+    function getStrengthColor(strength) {
+        if (strength < 40) return 'red';
+        if (strength < 70) return 'orange';
+        return 'green';
+    }
+
+    // Profile visibility toggle
+    const visibilityToggle = document.getElementById('visibility-toggle');
+    const visibilityStatus = document.querySelector('.visibility-status');
+
+    visibilityToggle.addEventListener('change', function() {
+        visibilityStatus.textContent = this.checked ? 'Public' : 'Private';
+    });
+
+    // Job preferences
+    const selectAllJobs = document.getElementById('select-all-jobs');
+    const clearJobSelection = document.getElementById('clear-job-selection');
+    const jobCheckboxes = document.querySelectorAll('input[name="job-type"]');
+
+    selectAllJobs.addEventListener('click', () => jobCheckboxes.forEach(cb => cb.checked = true));
+    clearJobSelection.addEventListener('click', () => jobCheckboxes.forEach(cb => cb.checked = false));
+
+    // Reviews sorting
+    const sortReviews = document.getElementById('sort-reviews');
+    const reviewsContainer = document.querySelector('.reviews-container');
+
+    sortReviews.addEventListener('change', function() {
+        // Here you would typically send an AJAX request to get sorted reviews
+        // For demonstration, we'll just reverse the order of reviews
+        const reviews = Array.from(reviewsContainer.children);
+        reviews.reverse().forEach(review => reviewsContainer.appendChild(review));
+    });
+
+    // Payment history pagination
+    const paymentTable = document.getElementById('payment-table');
+    let currentPage = 1;
+    const rowsPerPage = 10;
+
+    function loadPaymentHistory(page) {
+        // Here you would typically send an AJAX request to get payment history
+        // For demonstration, we'll generate dummy data
+        const startIndex = (page - 1) * rowsPerPage;
+        let html = '';
+        for (let i = startIndex; i < startIndex + rowsPerPage; i++) {
+            html += `
+                <tr>
+                    <td>${new Date().toLocaleDateString()}</td>
+                    <td>JOB${1000 + i}</td>
+                    <td>Laborer ${i + 1}</td>
+                    <td>₹${Math.floor(Math.random() * 1000) + 500}</td>
+                </tr>
+            `;
+        }
+        paymentTable.querySelector('tbody').innerHTML = html;
+    }
+
+    loadPaymentHistory(currentPage);
+
+    // Implement infinite scroll for payment history
+    paymentTable.addEventListener('scroll', function() {
+        if (this.scrollTop + this.clientHeight >= this.scrollHeight) {
+            currentPage++;
+            loadPaymentHistory(currentPage);
+        }
+    });
+
+    // FAQ accordion
+    const faqList = document.querySelector('.faq-list');
+    faqList.addEventListener('click', function(e) {
+        if (e.target.classList.contains('faq-question')) {
+            const answer = e.target.nextElementSibling;
+            answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+        }
+    });
+
+    // Contact support modal
+    const contactUsBtn = document.getElementById('contact-us');
+    const contactModal = document.getElementById('contact-modal');
+    const contactForm = document.getElementById('contact-form');
+
+    contactUsBtn.addEventListener('click', () => contactModal.style.display = 'block');
+
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        // Here you would typically send an AJAX request with the support query
+        alert("Your query has been submitted successfully!");
+        contactModal.style.display = 'none';
+    });
+
+    // Close modals when clicking outside
+    // Close modals when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target === passwordModal) passwordModal.style.display = 'none';
+        if (e.target === contactModal) contactModal.style.display = 'none';
+    });
+
+    // Real-time data validation
+    const emailField = document.getElementById('email');
+    const phoneField = document.getElementById('contact');
+
+    emailField.addEventListener('input', function() {
+        const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value);
+        this.setCustomValidity(isValid ? '' : 'Please enter a valid email address');
+        this.reportValidity();
+    });
+
+    phoneField.addEventListener('input', function() {
+        const isValid = /^\+?[0-9]{10,14}$/.test(this.value);
+        this.setCustomValidity(isValid ? '' : 'Please enter a valid phone number');
+        this.reportValidity();
+    });
+
+    // Bank details validation
+    const bankForm = document.querySelector('#payment-info form');
+    const ifscField = document.getElementById('ifsc-code');
+    const accountNumberField = document.getElementById('account-number');
+
+    ifscField.addEventListener('input', function() {
+        const isValid = /^[A-Z]{4}0[A-Z0-9]{6}$/.test(this.value);
+        this.setCustomValidity(isValid ? '' : 'Please enter a valid IFSC code');
+        this.reportValidity();
+    });
+
+    accountNumberField.addEventListener('input', function() {
+        const isValid = /^[0-9]{9,18}$/.test(this.value);
+        this.setCustomValidity(isValid ? '' : 'Please enter a valid account number');
+        this.reportValidity();
+    });
+
+    bankForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (this.checkValidity()) {
+            // Here you would typically send an AJAX request to update bank details
+            alert('Bank details updated successfully!');
+        } else {
+            alert('Please correct the errors in the form before submitting.');
+        }
+    });
+
+    // Dynamic FAQ loading
+    const faqSearch = document.getElementById('faq-search');
+    const faqContainer = document.querySelector('.faq-list');
+
+    const faqs = [
+        { question: "How do I post a job?", answer: "You can post a job by clicking on the 'Post a Job' link in the navigation menu." },
+        { question: "How are payments processed?", answer: "Payments are processed securely through our platform once you confirm the job completion." },
+        { question: "Can I change my account type?", answer: "Yes, you can switch between client and business profiles from your account settings." },
+        // Add more FAQs as needed
+    ];
+
+    function renderFAQs(faqs) {
+        faqContainer.innerHTML = faqs.map(faq => `
+            <div class="faq-item">
+                <div class="faq-question">${faq.question}</div>
+                <div class="faq-answer">${faq.answer}</div>
+            </div>
+        `).join('');
+    }
+
+    renderFAQs(faqs);
+
+    faqSearch.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const filteredFAQs = faqs.filter(faq => 
+            faq.question.toLowerCase().includes(searchTerm) || 
+            faq.answer.toLowerCase().includes(searchTerm)
+        );
+        renderFAQs(filteredFAQs);
+    });
+
+    // Lazy loading reviews
+    let reviewsPage = 1;
+    const reviewsPerPage = 5;
+
+    function loadMoreReviews() {
+        // Here you would typically send an AJAX request to get more reviews
+        // For demonstration, we'll generate dummy reviews
+        const startIndex = (reviewsPage - 1) * reviewsPerPage;
+        for (let i = startIndex; i < startIndex + reviewsPerPage; i++) {
+            const reviewItem = document.createElement('div');
+            reviewItem.className = 'review-item';
+            reviewItem.innerHTML = `
+                <div class="review-header">
+                    <div class="review-author">
+                        <img src="https://via.placeholder.com/40" alt="Reviewer">
+                        <span>Reviewer ${i + 1}</span>
+                    </div>
+                    <div class="star-rating">★★★★☆</div>
+                </div>
+                <p>This is a sample review text. The client was great to work with!</p>
+                <button class="reply-btn">Reply</button>
+            `;
+            reviewsContainer.appendChild(reviewItem);
+        }
+        reviewsPage++;
+    }
+
+    reviewsContainer.addEventListener('scroll', function() {
+        if (this.scrollTop + this.clientHeight >= this.scrollHeight - 100) {
+            loadMoreReviews();
+        }
+    });
+
+    // Initial load of reviews
+    loadMoreReviews();
+
+    // Reply to reviews functionality
+    reviewsContainer.addEventListener('click', function(e) {
+        if (e.target.classList.contains('reply-btn')) {
+            const replyText = prompt('Enter your reply:');
+            if (replyText) {
+                const replyElement = document.createElement('p');
+                replyElement.className = 'review-reply';
+                replyElement.textContent = `Your reply: ${replyText}`;
+                e.target.parentElement.appendChild(replyElement);
+                e.target.remove();
+            }
+        }
+    });
+
+    // Tooltip functionality
+    const tooltips = document.querySelectorAll('.tooltip-trigger');
+    tooltips.forEach(tooltip => {
+        tooltip.addEventListener('mouseover', function() {
+            const tooltipText = this.getAttribute('data-tooltip');
+            const tooltipElement = document.createElement('div');
+            tooltipElement.className = 'tooltip';
+            tooltipElement.textContent = tooltipText;
+            document.body.appendChild(tooltipElement);
+
+            const rect = this.getBoundingClientRect();
+            tooltipElement.style.top = `${rect.bottom + window.scrollY}px`;
+            tooltipElement.style.left = `${rect.left + window.scrollX}px`;
+        });
+
+        tooltip.addEventListener('mouseout', function() {
+            const tooltip = document.querySelector('.tooltip');
+            if (tooltip) tooltip.remove();
+        });
+    });
+
+    // Communication method selection
+    const commMethod = document.getElementById('comm-method');
+    commMethod.addEventListener('change', function() {
+        const method = this.value;
+        let promptMessage = '';
+        switch(method) {
+            case 'sms':
+                promptMessage = 'Enter your phone number for SMS notifications:';
+                break;
+            case 'email':
+                promptMessage = 'Enter your email for notifications:';
+                break;
+            case 'app':
+                promptMessage = 'App notifications will be sent to your registered device.';
+                break;
+        }
+        if (promptMessage) {
+            const userInput = method !== 'app' ? prompt(promptMessage) : null;
+            if (userInput || method === 'app') {
+                alert(`Communication preference updated to ${method}.`);
+            }
+        }
+    });
+
+    // Sidebar navigation highlight
+    const sidebarLinks = document.querySelectorAll('.sidebar a');
+    const sections = document.querySelectorAll('main section');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (pageYOffset >= sectionTop - 60) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        sidebarLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').substring(1) === current) {
+                link.classList.add('active');
+            }
+        });
+    });
+
+    // Initialize the page
+    loadMoreReviews();
+    loadPaymentHistory(currentPage);
+});
+    </script>
+</body>
+</html>

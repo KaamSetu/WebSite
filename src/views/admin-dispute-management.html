@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KaamSetu Admin Dashboard - Dispute Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00978A;
+            --secondary-color: #465FA2;
+            --background-color: #f4f4f4;
+            --text-color: #333;
+            --white: #ffffff;
+            --red: #ff4d4d;
+            --yellow: #ffd700;
+            --green: #4CAF50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .top-nav a {
+            color: var(--white);
+            text-decoration: none;
+            margin-right: 1rem;
+        }
+
+        .top-nav .search-box {
+            flex-grow: 1;
+            margin: 0 1rem;
+        }
+
+        .top-nav input[type="search"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .notifications {
+            position: relative;
+        }
+
+        .notifications .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--red);
+            color: var(--white);
+            border-radius: 50%;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            padding: 1rem;
+            position: fixed;
+            top: 60px;
+            bottom: 0;
+            left: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 1rem;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar a {
+            color: var(--white);
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1;
+            margin-left: 250px;
+            padding: 2rem;
+            margin-top: 60px;
+        }
+
+        .main-content h1 {
+            margin-bottom: 1rem;
+        }
+
+        /* Search and Filter */
+        .search-filter {
+            background-color: var(--white);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .search-filter input[type="text"],
+        .search-filter select {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .button {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #007f75;
+        }
+
+        /* Dispute Listings Table */
+        .dispute-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--white);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .dispute-table th, .dispute-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .dispute-table th {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .dispute-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .status-label {
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .status-unresolved {
+            background-color: var(--yellow);
+            color: #333;
+        }
+
+        .status-resolved {
+            background-color: var(--green);
+            color: var(--white);
+        }
+
+        .status-escalated {
+            background-color: var(--red);
+            color: var(--white);
+        }
+
+        /* Detailed Dispute View Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 4px;
+            width: 80%;
+            max-width: 800px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--secondary-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -17px;
+            background-color: var(--white);
+            border: 4px solid var(--secondary-color);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .left {
+            left: 0;
+        }
+
+        .right {
+            left: 50%;
+        }
+
+        .left::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            right: 30px;
+            border: medium solid var(--white);
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent var(--white);
+        }
+
+        .right::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            left: 30px;
+            border: medium solid var(--white);
+            border-width: 10px 10px 10px 0;
+            border-color: transparent var(--white) transparent transparent;
+        }
+
+        .right::after {
+            left: -16px;
+        }
+
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: var(--white);
+            position: relative;
+            border-radius: 6px;
+        }
+
+        @media screen and (max-width: 600px) {
+            .timeline::after {
+                left: 31px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+
+            .timeline-item::before {
+                left: 60px;
+                border: medium solid var(--white);
+                border-width: 10px 10px 10px 0;
+                border-color: transparent var(--white) transparent transparent;
+            }
+
+            .left::after, .right::after {
+                left: 15px;
+            }
+
+            .right {
+                left: 0%;
+            }
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+                margin-top: 60px;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .dispute-table {
+                font-size: 0.8rem;
+            }
+
+            .dispute-table th, .dispute-table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div>
+            <a href="#" class="logo">KaamSetu Admin</a>
+            <a href="#">Job Management</a>
+            <a href="#">User Management</a>
+            <a href="#">Platform Settings</a>
+        </div>
+        <div class="search-box">
+            <input type="search" placeholder="Search disputes...">
+        </div>
+        <div class="notifications">
+            <i class="fas fa-bell"></i>
+            <span class="badge">5</span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h2>Dispute Management</h2>
+            <ul>
+                <li><a href="#" class="active">Ongoing Disputes</a></li>
+                <li><a href="#">Resolved Disputes</a></li>
+                <li><a href="#">Escalated Issues</a></li>
+            </ul>
+            <h3>Filter by Type</h3>
+            <ul>
+                <li><a href="#">Payment Issues</a></li>
+                <li><a href="#">Labor Quality</a></li>
+                <li><a href="#">Timeline Delays</a></li>
+            </ul>
+            <h3>Filter by Urgency</h3>
+            <ul>
+                <li><a href="#">High Priority</a></li>
+                <li><a href="#">Medium Priority</a></li>
+                <li><a href="#">Low Priority</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <h1>Dispute Management</h1>
+            <p>Resolve ongoing disputes between clients, laborers, and supervisors.</p>
+
+            <div class="search-filter">
+                <input type="text" id="searchInput" placeholder="Search by dispute ID, job ID, or user name">
+                <select id="statusFilter">
+                    <option value="">All Statuses</option>
+                    <option value="unresolved">Unresolved</option>
+                    <option value="escalated">Escalated</option>
+                    <option value="resolved">Resolved</option>
+                </select>
+                <select id="typeFilter">
+                    <option value="">All Types</option>
+                    <option value="job">Job-related</option>
+                    <option value="payment">Payment-related</option>
+                    <option value="behavior">Behavior-related</option>
+                </select>
+                <select id="timeFilter">
+                    <option value="">All Time</option>
+                    <option value="7">Last 7 days</option>
+                    <option value="30">Last 30 days</option>
+                    <option value="90">Last 90 days</option>
+                </select>
+                <button class="button" id="applyFilters">Apply Filters</button>
+                <button class="button" id="resetFilters">Reset Filters</button>
+            </div>
+
+            <table class="dispute-table">
+                <thead>
+                    <tr>
+                        <th>Dispute ID</th>
+                        <th>Job ID</th>
+                        <th>Client</th>
+                        <th>Laborer</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="disputeTableBody">
+                    <!-- Dispute rows will be dynamically inserted here -->
+                </tbody>
+            </table>
+
+            <div id="pagination">
+                <!-- Pagination controls will be dynamically inserted here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Detailed Dispute View Modal -->
+    <div id="disputeModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Dispute Details</h2>
+            <div id="disputeDetails">
+                <!-- Dispute details will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script>
+        // Sample data for disputes
+        const disputes = [
+            { id: 'D001', jobId: 'J1001', client: 'John Doe', laborer: 'Jane Smith', type: 'Payment', status: 'Unresolved', description: 'Payment delay for completed work.' },
+            { id: 'D002', jobId: 'J1002', client: 'Alice Johnson', laborer: 'Bob Williams', type: 'Quality', status: 'Escalated', description: 'Unsatisfactory work quality reported.' },
+            { id: 'D003', jobId: 'J1003', client: 'Charlie Brown', laborer: 'Diana Davis', type: 'Timeline', status: 'Resolved', description: 'Delay in project completion.' },
+            // Add more sample disputes here
+        ];
+
+        
+
+    // Global variables
+    let currentPage = 1;
+    const disputesPerPage = 10;
+
+    // DOM Elements
+    const disputeTableBody = document.getElementById('disputeTableBody');
+    const paginationDiv = document.getElementById('pagination');
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const typeFilter = document.getElementById('typeFilter');
+    const timeFilter = document.getElementById('timeFilter');
+    const applyFiltersBtn = document.getElementById('applyFilters');
+    const resetFiltersBtn = document.getElementById('resetFilters');
+    const modal = document.getElementById('disputeModal');
+    const closeModal = document.getElementsByClassName('close')[0];
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', () => {
+        renderDisputeTable();
+        setupEventListeners();
+    });
+
+    // Setup event listeners
+    function setupEventListeners() {
+        applyFiltersBtn.addEventListener('click', applyFilters);
+        resetFiltersBtn.addEventListener('click', resetFilters);
+        closeModal.addEventListener('click', () => modal.style.display = 'none');
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
+
+    // Render dispute table
+    function renderDisputeTable(filteredDisputes = disputes) {
+        disputeTableBody.innerHTML = '';
+        const startIndex = (currentPage - 1) * disputesPerPage;
+        const endIndex = startIndex + disputesPerPage;
+        const disputesToRender = filteredDisputes.slice(startIndex, endIndex);
+
+        disputesToRender.forEach(dispute => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><a href="#" class="dispute-link" data-id="${dispute.id}">${dispute.id}</a></td>
+                <td>${dispute.jobId}</td>
+                <td>${dispute.client}</td>
+                <td>${dispute.laborer}</td>
+                <td>${getDisputeTypeIcon(dispute.type)} ${dispute.type}</td>
+                <td><span class="status-label status-${dispute.status.toLowerCase()}">${dispute.status}</span></td>
+                <td>
+                    <button class="button view-btn" data-id="${dispute.id}">View</button>
+                    <button class="button escalate-btn" data-id="${dispute.id}">Escalate</button>
+                    <button class="button resolve-btn" data-id="${dispute.id}">Resolve</button>
+                </td>
+            `;
+            disputeTableBody.appendChild(row);
+        });
+
+        setupDisputeLinks();
+        renderPagination(filteredDisputes.length);
+    }
+
+    // Get dispute type icon
+    function getDisputeTypeIcon(type) {
+        const icons = {
+            'Payment': '<i class="fas fa-money-bill-wave"></i>',
+            'Quality': '<i class="fas fa-hammer"></i>',
+            'Timeline': '<i class="fas fa-clock"></i>'
+        };
+        return icons[type] || '<i class="fas fa-question-circle"></i>';
+    }
+
+    // Setup dispute links
+    function setupDisputeLinks() {
+        const disputeLinks = document.querySelectorAll('.dispute-link, .view-btn');
+        disputeLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const disputeId = e.target.getAttribute('data-id');
+                showDisputeDetails(disputeId);
+            });
+        });
+
+        const escalateBtns = document.querySelectorAll('.escalate-btn');
+        escalateBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const disputeId = e.target.getAttribute('data-id');
+                escalateDispute(disputeId);
+            });
+        });
+
+        const resolveBtns = document.querySelectorAll('.resolve-btn');
+        resolveBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const disputeId = e.target.getAttribute('data-id');
+                resolveDispute(disputeId);
+            });
+        });
+    }
+
+    // Render pagination
+    function renderPagination(totalDisputes) {
+        const totalPages = Math.ceil(totalDisputes / disputesPerPage);
+        let paginationHTML = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+            paginationHTML += `<button class="button ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+        }
+
+        paginationDiv.innerHTML = paginationHTML;
+    }
+
+    // Change page
+    function changePage(page) {
+        currentPage = page;
+        renderDisputeTable();
+    }
+
+    // Apply filters
+    function applyFilters() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const statusValue = statusFilter.value;
+        const typeValue = typeFilter.value;
+        const timeValue = parseInt(timeFilter.value);
+
+        const filteredDisputes = disputes.filter(dispute => {
+            const matchesSearch = Object.values(dispute).some(value => 
+                value.toString().toLowerCase().includes(searchTerm)
+            );
+            const matchesStatus = statusValue === '' || dispute.status.toLowerCase() === statusValue;
+            const matchesType = typeValue === '' || dispute.type.toLowerCase().includes(typeValue);
+            const matchesTime = timeValue === '' || 
+                (timeValue && moment().diff(moment(dispute.createdAt), 'days') <= timeValue);
+
+            return matchesSearch && matchesStatus && matchesType && matchesTime;
+        });
+
+        currentPage = 1;
+        renderDisputeTable(filteredDisputes);
+    }
+
+    // Reset filters
+    function resetFilters() {
+        searchInput.value = '';
+        statusFilter.value = '';
+        typeFilter.value = '';
+        timeFilter.value = '';
+        currentPage = 1;
+        renderDisputeTable();
+    }
+
+    // Show dispute details
+    function showDisputeDetails(disputeId) {
+        const dispute = disputes.find(d => d.id === disputeId);
+        if (!dispute) return;
+
+        const detailsHTML = `
+            <h3>Dispute ${dispute.id}</h3>
+            <p><strong>Job ID:</strong> ${dispute.jobId}</p>
+            <p><strong>Client:</strong> ${dispute.client}</p>
+            <p><strong>Laborer:</strong> ${dispute.laborer}</p>
+            <p><strong>Type:</strong> ${dispute.type}</p>
+            <p><strong>Status:</strong> ${dispute.status}</p>
+            <p><strong>Description:</strong> ${dispute.description}</p>
+            <h4>Timeline</h4>
+            <div class="timeline">
+                ${generateTimelineHTML(dispute)}
+            </div>
+            <h4>Admin Actions</h4>
+            <textarea id="adminNotes" rows="4" placeholder="Add admin notes here..."></textarea>
+            <button class="button" onclick="addAdminNote('${dispute.id}')">Add Note</button>
+            <button class="button" onclick="requestMoreInfo('${dispute.id}')">Request More Info</button>
+            <button class="button" onclick="escalateDispute('${dispute.id}')">Escalate Dispute</button>
+            <button class="button" onclick="resolveDispute('${dispute.id}')">Resolve Dispute</button>
+        `;
+
+        document.getElementById('disputeDetails').innerHTML = detailsHTML;
+        modal.style.display = 'block';
+    }
+
+    // Generate timeline HTML
+    function generateTimelineHTML(dispute) {
+        // This is a placeholder. In a real application, you would have actual timeline data.
+        const timelineEvents = [
+            { date: '2023-09-25', event: 'Dispute raised' },
+            { date: '2023-09-26', event: 'Evidence submitted' },
+            { date: '2023-09-27', event: 'Admin review started' },
+        ];
+
+        return timelineEvents.map((event, index) => `
+            <div class="timeline-item ${index % 2 === 0 ? 'left' : 'right'}">
+                <div class="timeline-content">
+                    <h3>${event.date}</h3>
+                    <p>${event.event}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Add admin note
+    function addAdminNote(disputeId) {
+        const noteText = document.getElementById('adminNotes').value;
+        if (noteText.trim() === '') return;
+
+        // In a real application, you would send this note to the server
+        console.log(`Admin note added to dispute ${disputeId}: ${noteText}`);
+        alert('Admin note added successfully');
+        document.getElementById('adminNotes').value = '';
+    }
+
+    // Request more info
+    function requestMoreInfo(disputeId) {
+        // In a real application, you would implement the logic to request more information
+        console.log(`Requesting more information for dispute ${disputeId}`);
+        alert('Information request sent to involved parties');
+    }
+
+    // Escalate dispute
+    function escalateDispute(disputeId) {
+        // In a real application, you would implement the escalation logic
+        console.log(`Escalating dispute ${disputeId}`);
+        alert('Dispute escalated to senior admin');
+    }
+
+    // Resolve dispute
+    function resolveDispute(disputeId) {
+        // In a real application, you would implement the resolution logic
+        console.log(`Resolving dispute ${disputeId}`);
+        const resolutionType = prompt('Enter resolution type (e.g., refund, service adjustment, no fault):');
+        if (resolutionType) {
+            alert(`Dispute resolved. Resolution type: ${resolutionType}`);
+            // Update the dispute status in the disputes array
+            const disputeIndex = disputes.findIndex(d => d.id === disputeId);
+            if (disputeIndex !== -1) {
+                disputes[disputeIndex].status = 'Resolved';
+                renderDisputeTable();
+            }
+        }
+    }
+
+    // Simulated WebSocket for real-time updates
+    function simulateWebSocket() {
+        setInterval(() => {
+            const randomDispute = disputes[Math.floor(Math.random() * disputes.length)];
+            const randomStatus = ['Unresolved', 'Escalated', 'Resolved'][Math.floor(Math.random() * 3)];
+            randomDispute.status = randomStatus;
+            renderDisputeTable();
+        }, 30000); // Simulate an update every 30 seconds
+    }
+
+    // Start the simulated WebSocket
+    simulateWebSocket();
+</script>
+</body>
+</html>

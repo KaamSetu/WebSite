@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KaamSetu - Post a Job</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f4;
+}
+
+/* Variables */
+:root {
+    --primary-color: #00978A;
+    --secondary-color: #465FA2;
+    --text-color: #333;
+    --bg-color: #f4f4f4;
+    --white: #ffffff;
+    --gray-light: #e0e0e0;
+    --gray: #9e9e9e;
+    --shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Header styles */
+header {
+    background-color: var(--white);
+    box-shadow: var(--shadow);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    height: 40px;
+}
+
+.search-bar {
+    position: relative;
+    flex: 1;
+    margin-left: 1rem;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--gray-light);
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.search-bar i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray);
+}
+
+nav {
+    display: flex;
+    gap: 1rem;
+}
+
+nav a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+nav a:hover {
+    color: var(--primary-color);
+}
+
+.header-icons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.notification-icon {
+    position: relative;
+    cursor: pointer;
+}
+
+.notification-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: red;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 5px;
+    border-radius: 50%;
+}
+
+.profile-icon img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Sidebar styles */
+.sidebar {
+    width: 250px;
+    background-color: var(--white);
+    padding: 2rem 1rem;
+    box-shadow: var(--shadow);
+    position: fixed;
+    top: 70px;
+    bottom: 0;
+    left: 0;
+    overflow-y: auto;
+    z-index: 999;
+}
+
+.sidebar-menu {
+    list-style-type: none;
+}
+
+.sidebar-menu li {
+    margin-bottom: 1rem;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    color: var(--text-color);
+    text-decoration: none;
+    padding: 0.5rem;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.sidebar-menu a:hover {
+    background-color: var(--gray-light);
+}
+
+.sidebar-menu i {
+    margin-right: 0.5rem;
+    width: 20px;
+    text-align: center;
+}
+
+/* Main content styles */
+main {
+    margin-left: 250px;
+    padding: 2rem;
+    background-color: var(--bg-color);
+    min-height: 100vh;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.subheading {
+    font-size: 1.2rem;
+    color: var(--secondary-color);
+    margin-bottom: 2rem;
+}
+
+.form-section {
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: 5px;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--gray-light);
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+textarea {
+    height: 150px;
+    resize: vertical;
+}
+
+.file-upload {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.file-upload input[type="file"] {
+    display: none;
+}
+
+.file-upload label {
+    background-color: var(--gray-light);
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.file-list {
+    margin-top: 1rem;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--gray-light);
+    padding: 0.5rem;
+    border-radius: 5px;
+    margin-bottom: 0.5rem;
+}
+
+.file-item button {
+    background-color: transparent;
+    border: none;
+    color: red;
+    cursor: pointer;
+}
+
+.budget-slider {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.budget-range {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background-color: #007f75;
+}
+
+/* Notification panel styles */
+.notification-panel {
+    position: fixed;
+    top: 70px;
+    right: 0;
+    width: 300px;
+    background-color: var(--white);
+    box-shadow: var(--shadow);
+    border-radius: 5px 0 0 5px;
+    padding: 1rem;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+}
+
+.notification-panel.active {
+    transform: translateX(0);
+}
+
+.notification-item {
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--gray-light);
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    nav {
+        display: none;
+    }
+
+    .mobile-menu {
+        display: block;
+        cursor: pointer;
+        font-size: 1.5rem;
+    }
+
+    .search-bar {
+        display: none;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    main {
+        margin-left: 0;
+        padding: 1rem;
+    }
+
+    .container {
+        flex-direction: column;
+    }
+
+    .notification-panel {
+        width: 100%;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <img src="/api/placeholder/120/40" alt="KaamSetu Logo" class="logo">
+            <div class="search-bar">
+                <input type="text" placeholder="Search...">
+                <i class="fas fa-search"></i>
+            </div>
+            <nav>
+                <a href="#" id="nav-dashboard">Dashboard</a>
+                <a href="#" id="nav-available-jobs">Available Jobs</a>
+                <a href="#" id="nav-notifications">Notifications</a>
+                <a href="#" id="nav-profile">Profile</a>
+            </nav>
+            <div class="header-icons">
+                <div class="notification-icon" id="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count" id="notification-count">3</span>
+                </div>
+                <div class="profile-icon" id="profile-icon">
+                    <img src="/api/placeholder/40/40" alt="Profile">
+                </div>
+            </div>
+            <div class="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#" id="sidebar-dashboard"><i class="fas fa-home"></i>Dashboard</a></li>
+                <li><a href="#" id="sidebar-post-job"><i class="fas fa-plus-circle"></i>Post a Job</a></li>
+                <li><a href="#" id="sidebar-ongoing-jobs"><i class="fas fa-briefcase"></i>Ongoing Jobs</a></li>
+                <li><a href="#" id="sidebar-past-jobs"><i class="fas fa-history"></i>Past Jobs</a></li>
+                <li><a href="#" id="sidebar-payments"><i class="fas fa-credit-card"></i>Payments</a></li>
+                <li><a href="#" id="sidebar-profile"><i class="fas fa-user"></i>Profile</a></li>
+            </ul>
+        </aside>
+
+        <main>
+            <h1>Post a Job</h1>
+            <p class="subheading">Fill out the details below to post your job and receive bids.</p>
+
+            <form id="post-job-form">
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="job-title">Job Title</label>
+                        <input type="text" id="job-title" name="job-title" placeholder="Enter job title here" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="job-description">Job Description</label>
+                        <textarea id="job-description" name="job-description" placeholder="Provide a clear, detailed description of the job" required></textarea>
+                        <div id="word-count">0/300 words</div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="job-location">Job Location</label>
+                        <input type="text" id="job-location" name="job-location" placeholder="Enter job location" required>
+                    </div>
+                    <div id="map"></div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="job-category">Job Category</label>
+                        <select id="job-category" name="job-category" required>
+                            <option value="">Select a category</option>
+                            <option value="electrician">Electrician</option>
+                            <option value="painter">Painter</option>
+                            <option value="plumber">Plumber</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="job-subcategory">Job Sub-category</label>
+                        <select id="job-subcategory" name="job-subcategory" required>
+                            <option value="">Select a sub-category</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="start-date">Start Date</label>
+                        <input type="date" id="start-date" name="start-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="end-date">End Date</label>
+                        <input type="date" id="end-date" name="end-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="urgent-job" name="urgent-job">
+                            Mark as urgent
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="budget">Budget (₹)</label>
+                        <input type="number" id="budget" name="budget" min="100" max="5000" value="1000" required>
+                        <input type="range" id="budget-slider" class="budget-slider" min="100" max="5000" value="1000" step="100">
+                        <div class="budget-range">
+                            <span>₹100</span>
+                            <span>₹5000</span>
+                        </div>
+                    </div>
+                    <div id="payment-breakdown"></div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="job-photos">Upload Photos (Max 5)</label>
+                        <div class="file-upload">
+                            <label for="job-photos">
+                                <i class="fas fa-cloud-upload-alt"></i> Choose Files
+                            </label>
+                            <input type="file" id="job-photos" name="job-photos" accept="image/*" multiple>
+                        </div>
+                        <div id="file-list" class="file-list"></div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="post-job-btn">Post Job</button>
+            </form>
+        </main>
+    </div>
+
+    <div class="notification-panel" id="notification-panel">
+        <h2>Notifications</h2>
+        <div id="notification-list">
+            <!-- Notifications will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mapbox-gl/2.9.1/mapbox-gl.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mapbox-gl/2.9.1/mapbox-gl.css" rel="stylesheet" />
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('post-job-form');
+            const jobTitle = document.getElementById('job-title');
+            const jobDescription = document.getElementById('job-description');
+            const wordCount = document.getElementById('word-count');
+            const jobCategory = document.getElementById('job-category');
+            const jobSubcategory = document.getElementById('job-subcategory');
+            const budgetInput = document.getElementById('budget');
+            const budgetSlider = document.getElementById('budget-slider');
+            const paymentBreakdown = document.getElementById('payment-breakdown');
+            const fileInput = document.getElementById('job-photos');
+            const fileList = document.getElementById('file-list');
+            const postJobBtn = document.getElementById('post-job-btn');
+
+            // Job title suggestions
+            const jobTitleSuggestions = [
+                'Install ceiling fan',
+                'Paint living room',
+                'Fix leaking faucet',
+                'Repair electrical outlet',
+                'Install light fixture'
+            ];
+
+            jobTitle.addEventListener('input', function() {
+                const input = this.value.toLowerCase();
+                const suggestions = jobTitleSuggestions.filter(suggestion => 
+                    suggestion.toLowerCase().includes(input)
+                );
+
+                // Display suggestions (you might want to create a dropdown for this)
+                console.log(suggestions);
+            });
+
+            // Word count for job description
+            jobDescription.addEventListener('input', function() {
+                const words = this.value.trim().split(/\s+/).length;
+                wordCount.textContent = `${words}/300 words`;
+                
+                if (words > 300) {
+                    wordCount.style.color = 'red';
+                } else {
+                    wordCount.style.color = 'inherit';
+                }
+            });
+
+            // Job category and subcategory
+            const subcategories = {
+                electrician: ['Install fan', 'Fix outlet', 'Wiring'],
+                painter: ['Interior painting', 'Exterior painting', 'Wall texturing'],
+                plumber: ['Fix leaks', 'Install taps', 'Unclog drains']
+            };
+
+            jobCategory.addEventListener('change', function() {
+                const category = this.value;
+                jobSubcategory.innerHTML = '<option value="">Select a sub-category</option>';
+                
+                if (category in subcategories) {
+                    subcategories[category].forEach(sub => {
+                        const option = document.createElement('option');
+                        option.value = sub.toLowerCase().replace(/\s+/g, '-');
+                        option.textContent = sub;
+                        jobSubcategory.appendChild(option);
+                    });
+                }
+            });
+
+            // Budget slider
+            budgetSlider.addEventListener('input', function() {
+                budgetInput.value = this.value;
+                updatePaymentBreakdown();
+            });
+
+
+            budgetInput.addEventListener('input', function() {
+                budgetSlider.value = this.value;
+                updatePaymentBreakdown();
+            });
+
+            function updatePaymentBreakdown() {
+                const totalBudget = parseInt(budgetInput.value);
+                const platformFee = totalBudget * 0.1; // Assuming 10% platform fee
+                const laborerEarnings = totalBudget - platformFee;
+
+                paymentBreakdown.innerHTML = `
+                    <p>Total Budget: ₹${totalBudget}</p>
+                    <p>Platform Fee: ₹${platformFee.toFixed(2)}</p>
+                    <p>Laborer Earnings: ₹${laborerEarnings.toFixed(2)}</p>
+                `;
+            }
+
+            // File upload handling
+            fileInput.addEventListener('change', function() {
+                fileList.innerHTML = '';
+                if (this.files.length > 5) {
+                    alert('You can only upload a maximum of 5 photos.');
+                    this.value = '';
+                    return;
+                }
+
+                Array.from(this.files).forEach(file => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    fileItem.innerHTML = `
+                        <span>${file.name}</span>
+                        <button type="button" class="remove-file">&times;</button>
+                    `;
+                    fileList.appendChild(fileItem);
+                });
+            });
+
+            fileList.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-file')) {
+                    e.target.closest('.file-item').remove();
+                }
+            });
+
+            // Map initialization (using Mapbox)
+            mapboxgl.accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN';
+            const map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v11',
+                center: [78.9629, 20.5937], // Center of India
+                zoom: 4
+            });
+
+            const marker = new mapboxgl.Marker();
+
+            map.on('click', function(e) {
+                marker.setLngLat(e.lngLat).addTo(map);
+                document.getElementById('job-location').value = `${e.lngLat.lat.toFixed(4)}, ${e.lngLat.lng.toFixed(4)}`;
+            });
+
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate form
+                if (!validateForm()) {
+                    return;
+                }
+
+                // Collect form data
+                const formData = new FormData(this);
+
+                // Add additional data
+                formData.append('urgent', document.getElementById('urgent-job').checked);
+                formData.append('location', document.getElementById('job-location').value);
+
+                // Here you would typically send the formData to your server
+                // For demonstration, we'll just log it to the console
+                for (let [key, value] of formData.entries()) {
+                    console.log(key, value);
+                }
+
+                alert('Job posted successfully!');
+                this.reset();
+                fileList.innerHTML = '';
+                marker.remove();
+            });
+
+            function validateForm() {
+                let isValid = true;
+
+                // Check required fields
+                form.querySelectorAll('[required]').forEach(field => {
+                    if (!field.value.trim()) {
+                        isValid = false;
+                        field.classList.add('error');
+                    } else {
+                        field.classList.remove('error');
+                    }
+                });
+
+                // Check word count
+                const words = jobDescription.value.trim().split(/\s+/).length;
+                if (words > 300) {
+                    isValid = false;
+                    jobDescription.classList.add('error');
+                    alert('Job description should not exceed 300 words.');
+                } else {
+                    jobDescription.classList.remove('error');
+                }
+
+                // Check date range
+                const startDate = new Date(document.getElementById('start-date').value);
+                const endDate = new Date(document.getElementById('end-date').value);
+                if (endDate < startDate) {
+                    isValid = false;
+                    document.getElementById('end-date').classList.add('error');
+                    alert('End date should be after the start date.');
+                } else {
+                    document.getElementById('end-date').classList.remove('error');
+                }
+
+                // Check file upload
+                if (fileInput.files.length > 5) {
+                    isValid = false;
+                    alert('You can only upload a maximum of 5 photos.');
+                }
+
+                return isValid;
+            }
+
+            // Mobile responsiveness
+            function adjustForMobile() {
+                if (window.innerWidth <= 768) {
+                    document.querySelector('nav').innerHTML = '<i class="fas fa-bars"></i>';
+                    // Implement a mobile menu here
+                } else {
+                    // Restore desktop navigation
+                    document.querySelector('nav').innerHTML = `
+                        <a href="#" id="nav-dashboard">Dashboard</a>
+                        <a href="#" id="nav-available-jobs">Available Jobs</a>
+                        <a href="#" id="nav-notifications">Notifications</a>
+                        <a href="#" id="nav-profile">Profile</a>
+                    `;
+                }
+            }
+
+            window.addEventListener('resize', adjustForMobile);
+            adjustForMobile();
+
+            // Implement auto-save functionality
+            let autoSaveTimeout;
+            form.addEventListener('input', function() {
+                clearTimeout(autoSaveTimeout);
+                autoSaveTimeout = setTimeout(function() {
+                    localStorage.setItem('jobPostDraft', JSON.stringify(new FormData(form)));
+                }, 1000);
+            });
+
+            // Load draft on page load
+            const savedDraft = localStorage.getItem('jobPostDraft');
+            if (savedDraft) {
+                const formData = JSON.parse(savedDraft);
+                for (let [key, value] of Object.entries(formData)) {
+                    const field = form.elements[key];
+                    if (field) {
+                        field.value = value;
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post a Job</title>
+    <style>
+        * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #00978A;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus {
+    border-color: #00978A;
+    outline: none;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #00978A;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #007e70;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #00978A;
+    color: white;
+}
+
+tbody tr:hover {
+    background-color: #f2f2f2;
+}
+
+.labor-selection {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+#milestoneSection {
+    margin-top: 20px;
+}
+
+.milestone-input {
+    display: flex;
+    gap: 10px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Job Card Styling */
+#jobCard {
+    background: #e7f9f7;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+#jobCard h3 {
+    color: #00978A;
+}
+
+#jobCardDetails {
+    margin-top: 10px;
+}
+
+#coordinatesDisplay {
+    margin-top: 5px;
+    color: #555;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .labor-selection {
+        flex-direction: column;
+    }
+
+    #milestoneSection {
+        margin-top: 10px;
+    }
+
+    table {
+        font-size: 14px;
+    }
+
+    .modal-content {
+        width: 90%;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Post a Job</h1>
+        <form id="postJobForm">
+            <div class="form-group">
+                <label for="jobTitle">Job Title:</label>
+                <input type="text" id="jobTitle" placeholder="Enter job title" required>
+            </div>
+
+            <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" id="location" placeholder="Enter location" required>
+                <button type="button" id="detectLocationButton">Detect Location</button>
+                <div id="coordinatesDisplay"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="startDate">Start Date:</label>
+                <input type="date" id="startDate" required>
+            </div>
+            <div class="form-group">
+                <label for="endDate">End Date:</label>
+                <input type="date" id="endDate" required>
+            </div>
+
+            <div class="form-group labor-selection">
+                <label for="laborType">Select Labor Type:</label>
+                <select id="laborType">
+                    <option value="">Choose labor type</option>
+                    <option value="mason">Mason</option>
+                    <option value="helper">Helper</option>
+                    <option value="supervisor">Supervisor</option>
+                    <option value="electrician">Electrician</option>
+                    <option value="plumber">Plumber</option>
+                </select>
+                <input type="number" id="laborCount" min="1" placeholder="Number of laborers">
+                <button type="button" id="addLaborButton">Add Labor</button>
+            </div>
+
+            <table id="laborTable">
+                <thead>
+                    <tr>
+                        <th>Labor Type</th>
+                        <th>Count</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamic labor rows will be added here -->
+                </tbody>
+            </table>
+
+            <div class="form-group">
+                <label for="estimatedCost">Estimated Payment:</label>
+                <input type="number" id="estimatedCost" placeholder="Enter total estimated cost" required>
+            </div>
+
+            <div class="form-group">
+                <label for="paymentType">Payment Type:</label>
+                <select id="paymentType">
+                    <option value="oneTime">One-Time Payment</option>
+                    <option value="milestone">Milestone Payment</option>
+                    <option value="dayWise">Day-Wise Payment</option>
+                </select>
+            </div>
+
+            <div id="milestoneSection" class="hidden">
+                <h3>Milestones</h3>
+                <div class="milestone-input">
+                    <input type="text" placeholder="Milestone Description">
+                    <input type="number" placeholder="Percentage (%)" min="0" max="100">
+                    <button type="button" class="addMilestoneButton">Add Milestone</button>
+                </div>
+                <table id="milestoneTable">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Percentage</th>
+                            <th>Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dynamic milestone rows will be added here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="jobCard" class="hidden">
+                <h3>Job Card</h3>
+                <div id="jobCardDetails">
+                    <!-- Job card details will be populated here -->
+                </div>
+            </div>
+
+            <button type="button" id="previewButton">Preview Job</button>
+            <button type="submit" class="submit-btn">Post Job</button>
+        </form>
+    </div>
+
+    <div id="previewModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Job Preview</h2>
+            <div id="jobPreviewDetails"></div>
+            <button id="confirmPostButton">Confirm Post</button>
+        </div>
+    </div>
+
+    <script>
+        // Sample labor data
+const laborers = [
+    { type: 'Mason', rate: 500 },
+    { type: 'Helper', rate: 300 },
+    { type: 'Supervisor', rate: 800 },
+    { type: 'Electrician', rate: 600 },
+    { type: 'Plumber', rate: 550 },
+];
+
+let selectedLabor = [];
+let totalCost = 0;
+
+// Function to populate labor selection dropdown
+function populateLaborDropdown() {
+    const laborSelect = document.getElementById('laborType');
+    laborers.forEach(labor => {
+        const option = document.createElement('option');
+        option.value = labor.type;
+        option.textContent = labor.type;
+        laborSelect.appendChild(option);
+    });
+}
+
+// Add labor to the list
+function addLabor() {
+    const laborType = document.getElementById('laborType').value;
+    const laborCount = parseInt(document.getElementById('laborCount').value);
+
+    if (!laborType || isNaN(laborCount) || laborCount <= 0) {
+        alert('Please select a labor type and enter a valid number.');
+        return;
+    }
+
+    const laborDetails = laborers.find(labor => labor.type === laborType);
+    if (laborDetails) {
+        selectedLabor.push({ type: laborType, count: laborCount, rate: laborDetails.rate });
+        renderLaborTable();
+        updateEstimatedCost();
+        clearLaborSelection();
+    }
+}
+
+// Render the labor selection table
+function renderLaborTable() {
+    const tableBody = document.getElementById('laborTableBody');
+    tableBody.innerHTML = '';
+
+    selectedLabor.forEach((labor, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${labor.type}</td>
+            <td>${labor.count}</td>
+            <td>${labor.rate}</td>
+            <td>${labor.rate * labor.count}</td>
+            <td><button onclick="removeLabor(${index})">Remove</button></td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+// Update estimated cost
+function updateEstimatedCost() {
+    totalCost = selectedLabor.reduce((acc, labor) => acc + (labor.rate * labor.count), 0);
+    document.getElementById('estimatedCost').value = totalCost;
+}
+
+// Clear labor selection inputs
+function clearLaborSelection() {
+    document.getElementById('laborCount').value = '';
+    document.getElementById('laborType').selectedIndex = 0;
+}
+
+// Remove labor from the selection
+function removeLabor(index) {
+    selectedLabor.splice(index, 1);
+    renderLaborTable();
+    updateEstimatedCost();
+}
+
+// Handle posting job
+function postJob() {
+    const jobTitle = document.getElementById('jobTitle').value;
+    const jobLocation = document.getElementById('jobLocation').value;
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
+
+    if (!jobTitle || !jobLocation || !startDate || !endDate || selectedLabor.length === 0) {
+        alert('Please fill in all fields and select laborers before posting the job.');
+        return;
+    }
+
+    const jobDetails = {
+        jobID: Math.floor(Math.random() * 1000000),
+        jobTitle,
+        jobLocation,
+        startDate,
+        endDate,
+        labor: selectedLabor,
+        totalCost,
+        paymentType,
+    };
+
+    displayJobSummary(jobDetails);
+}
+
+// Display job summary in a modal
+function displayJobSummary(jobDetails) {
+    const jobCard = document.getElementById('jobCard');
+    jobCard.innerHTML = `
+        <h3>Job Summary</h3>
+        <p><strong>Job ID:</strong> ${jobDetails.jobID}</p>
+        <p><strong>Job Title:</strong> ${jobDetails.jobTitle}</p>
+        <p><strong>Location:</strong> ${jobDetails.jobLocation}</p>
+        <p><strong>Start Date:</strong> ${jobDetails.startDate}</p>
+        <p><strong>End Date:</strong> ${jobDetails.endDate}</p>
+        <p><strong>Payment Type:</strong> ${jobDetails.paymentType}</p>
+        <p><strong>Total Estimated Cost:</strong> ₹${jobDetails.totalCost}</p>
+        <h4>Selected Laborers:</h4>
+        <ul>
+            ${jobDetails.labor.map(labor => `<li>${labor.count} x ${labor.type} at ₹${labor.rate} each</li>`).join('')}
+        </ul>
+    `;
+    jobCard.style.display = 'block'; // Show the job card
+}
+
+// Event Listeners
+document.addEventListener('DOMContentLoaded', () => {
+    populateLaborDropdown();
+
+    document.getElementById('addLaborBtn').addEventListener('click', addLabor);
+    document.getElementById('postJobBtn').addEventListener('click', postJob);
+    
+    // Location detection logic
+    document.getElementById('detectLocationBtn').addEventListener('click', () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const coordinates = `${position.coords.latitude}, ${position.coords.longitude}`;
+                document.getElementById('jobLocation').value = coordinates;
+            }, () => {
+                alert('Unable to retrieve your location. Please enter it manually.');
+            });
+        } else {
+            alert('Geolocation is not supported by this browser.');
+        }
+    });
+});
+
+    </script>
+</body>
+</html>

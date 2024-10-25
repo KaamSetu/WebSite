@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Jobs - KaamSetu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00978A;
+            --secondary-color: #465FA2;
+            --completed-color: #4CAF50;
+            --ongoing-color: #FFA500;
+            --posted-color: #2196F3;
+            --background-color: #f4f4f4;
+            --text-color: #333;
+            --card-background: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Filter Styles */
+        .filter-section {
+            background-color: #fff;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .filter-button {
+            padding: 0.5rem 1rem;
+            border: none;
+            background-color: #f0f0f0;
+            color: var(--text-color);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-button.active {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .filter-button:hover {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+        /* Job Cards Styles */
+        .job-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            min-height: 60vh;
+        }
+
+        .job-card {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: max-content;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .job-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .job-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .job-status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-completed {
+            background-color: var(--completed-color);
+            color: #fff;
+        }
+
+        .status-ongoing {
+            background-color: var(--ongoing-color);
+            color: #fff;
+        }
+
+        .status-posted {
+            background-color: var(--posted-color);
+            color: #fff;
+        }
+
+        .job-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .view-details {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .edit-job {
+            background-color: var(--secondary-color);
+            color: #fff;
+        }
+
+        .cancel-job {
+            background-color: #f44336;
+            color: #fff;
+        }
+
+        /* Pagination Styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .pagination button {
+            padding: 0.5rem 1rem;
+            margin: 0 0.25rem;
+            border: none;
+            background-color: var(--primary-color);
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .pagination button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: var(--secondary-color);
+            color: #fff;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-links a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 1rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .filter-buttons {
+                flex-wrap: wrap;
+            }
+
+            .job-list {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">KaamSetu</div>
+            <div class="nav-links">
+                <a href="#">Dashboard</a>
+                <a href="#">Profile</a>
+                <a href="#">Post a Job</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="filter-section">
+            <div class="filter-buttons">
+                <button class="filter-button active" data-filter="all">All Jobs</button>
+                <button class="filter-button" data-filter="ongoing">Ongoing Jobs</button>
+                <button class="filter-button" data-filter="completed">Completed Jobs</button>
+                <button class="filter-button" data-filter="posted">Posted Jobs</button>
+            </div>
+        </section>
+
+        <section class="job-list" id="jobList">
+            <!-- Job cards will be dynamically inserted here -->
+        </section>
+
+        <div class="pagination">
+            <button id="loadMore">Load More Jobs</button>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-links">
+                <a href="#">Terms & Conditions</a>
+                <a href="#">FAQs</a>
+                <a href="#">Help</a>
+            </div>
+            <div class="contact-info">
+                Support: support@kaamsetu.com | Phone: +91 1234567890
+            </div>
+            <div class="logo">KaamSetu</div>
+        </div>
+    </footer>
+
+    <script>
+        // Sample job data (replace with actual data from your backend)
+        const jobs = [
+            { id: 1, title: "Plumbing Repair", date: "2024-09-15", location: "Mumbai", status: "completed", description: "Fixed leaky faucet and replaced pipes.", laborers: 1, payment: "Paid" },
+            { id: 2, title: "House Painting", date: "2024-09-18", location: "Delhi", status: "ongoing", description: "Painting entire house interior.", laborers: 3, payment: "Pending" },
+            { id: 3, title: "Lawn Mowing", date: "2024-09-20", location: "Bangalore", status: "posted", description: "Need lawn mowed and trimmed.", laborers: 2, payment: "Not started" },
+            // Add more job objects as needed
+        ];
+
+        const jobList = document.getElementById('jobList');
+        const filterButtons = document.querySelectorAll('.filter-button');
+        const loadMoreButton = document.getElementById('loadMore');
+
+        let currentFilter = 'all';
+        let displayedJobs = 0;
+        const jobsPerLoad = 6;
+
+        function createJobCard(job) {
+            const jobCard = document.createElement('div');
+            jobCard.classList.add('job-card');
+            jobCard.innerHTML = `
+                <h3 class="job-title">${job.title}</h3>
+                <p class="job-info">Date: ${job.date} | Location: ${job.location}</p>
+                <span class="job-status status-${job.status}">${job.status.charAt(0).toUpperCase() + job.status.slice(1)}</span>
+                <p class="job-info">${job.description}</p>
+                <p class="job-info">Laborers: ${job.laborers} | Payment: ${job.payment}</p>
+                <div class="job-actions">
+                    <button class="action-button view-details">View Details</button>
+                    ${job.status !== 'completed' ? '<button class="action-button edit-job">Edit Job</button>' : ''}
+                    ${job.status === 'posted' ? '<button class="action-button cancel-job">Cancel Job</button>' : ''}
+                </div>
+            `;
+            return jobCard;
+        }
+
+        function displayJobs() {
+            jobList.innerHTML = '';
+            const filteredJobs = currentFilter === 'all' ? jobs : jobs.filter(job => job.status === currentFilter);
+            const jobsToDisplay = filteredJobs.slice(0, displayedJobs);
+            jobsToDisplay.forEach(job => {
+                jobList.appendChild(createJobCard(job));
+            });
+            loadMoreButton.style.display = displayedJobs >= filteredJobs.length ? 'none' : 'block';
+        }
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                currentFilter = button.dataset.filter;
+                displayedJobs = jobsPerLoad;
+                displayJobs();
+            });
+        });
+
+        loadMoreButton.addEventListener('click', () => {
+            displayedJobs += jobsPerLoad;
+            displayJobs();
+        });
+
+        // Initial display
+        displayedJobs = jobsPerLoad;
+        displayJobs();
+    </script>
+</body>
+</html>

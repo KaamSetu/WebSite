@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laborer Dashboard</title>
+    <style>
+        /* CSS styles */
+        :root {
+            --primary-color: #00978A;
+            --secondary-color: #465FA2;
+            --bg-color: #f5f5f5;
+            --text-color: #333;
+            --border-color: #ddd;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .dashboard-container {
+            display: flex;
+            flex-grow: 1;
+        }
+        .hamburger-menu {
+            display: none;
+        }
+        .left-pane {
+            width: 250px;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 16px;
+            padding-left: 50px;
+            transition: all 0.3s ease;
+            position: sticky;
+            top: 0;
+            height: fit-content;
+        }
+
+        .left-pane h2 {
+            margin-bottom: 20px;
+        }
+
+        .left-pane ul {
+            list-style-type: none;
+        }
+
+        .left-pane ul li {
+            margin-bottom: 10px;
+        }
+
+        .left-pane ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .left-pane ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .welcome-section, .job-section, .earnings-summary, .notifications {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-section h2 {
+            margin-bottom: 10px;
+        }
+
+        .quick-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .job-section h3 {
+            margin-bottom: 15px;
+        }
+
+        .job-card {
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .job-card h4 {
+            margin-bottom: 10px;
+        }
+
+        .job-card p {
+            margin-bottom: 5px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #007a6e;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .left-pane {
+                width: 100%;
+                display: none;
+            }
+
+            .left-pane.active {
+                display: block;
+            }
+
+            .hamburger-menu {
+                display: block;
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                z-index: 100;
+                background-color: var(--secondary-color);
+                color: white;
+                padding: 10px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Laborer Dashboard</h1>
+    </header>
+
+    <div class="dashboard-container">
+        <div class="left-pane" id="leftPane">
+            <h2>Menu</h2>
+            <ul>
+                <!-- <li><a href="#" data-section="dashboard">Dashboard</a></li>
+                <li><a href="#" data-section="available-jobs">Available Jobs</a></li>
+                <li><a href="#" data-section="payments">Payments</a></li>
+                <li><a href="#" data-section="groups">Groups</a></li>
+                <li><a href="#" data-section="past-jobs">Past Jobs</a></li>
+                <li><a href="#" data-section="my-profile">My Profile</a></li> -->
+                <li><a href="#" class="active">Dashboard</a></li>
+                <li><a href="labor-availableJobs.html">Available Jobs</a></li>
+                <li><a href="labor-payment.html">Payments</a></li>
+                <li><a href="labor-group.html">Groups</a></li>
+                <li><a href="labor-pastJob.html">Past Jobs</a></li>
+                <li><a href="labor-profile.html">My Profile</a></li>
+            </ul>
+        </div>
+        <div class="hamburger-menu" id="hamburgerMenu">☰</div>
+        <div class="main-content">
+            <div class="welcome-section">
+                <h2>Welcome, John Doe</h2>
+                <div class="quick-stats">
+                    <div class="stat-item">
+                        <h4>Jobs Completed</h4>
+                        <p>25</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4>Average Rating</h4>
+                        <p>4.8/5</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4>Total Earnings</h4>
+                        <p>$5,000</p>
+                    </div>
+                </div>
+                <button class="btn" id="updateProfileBtn">Update Profile</button>
+                <button class="btn" id="linkUPIBtn">Link UPI</button>
+            </div>
+            <div class="job-section" id="currentlyAppliedJobs">
+                <h3>Currently Applied Jobs</h3>
+                <!-- Job cards will be dynamically added here -->
+            </div>
+            <div class="job-section" id="upcomingJobs">
+                <h3>Upcoming Jobs</h3>
+                <!-- Job cards will be dynamically added here -->
+            </div>
+            <div class="job-section" id="activeJobs">
+                <h3>Active Jobs</h3>
+                <!-- Job cards will be dynamically added here -->
+            </div>
+            <div class="job-section" id="clientsToReview">
+                <h3>Clients to Review</h3>
+                <!-- Client review cards will be dynamically added here -->
+            </div>
+            <div class="earnings-summary">
+                <h3>Earnings Summary</h3>
+                <p>Current Balance: $500</p>
+                <p>Total Earnings: $5,000</p>
+                <button class="btn" id="viewTransactionsBtn">View Transactions</button>
+            </div>
+            <div class="notifications">
+                <h3>Notifications</h3>
+                <div id="notificationList">
+                    <!-- Notifications will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Laborer Dashboard. All rights reserved.</p>
+    </footer>
+
+    <!-- Modals -->
+    <div id="rateClientModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Rate Client</h2>
+            <form id="rateClientForm">
+                <label for="rating">Rating:</label>
+                <select id="rating" name="rating" required>
+                    <option value="5">5 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="2">2 Stars</option>
+                    <option value="1">1 Star</option>
+                </select>
+                <label for="review">Review:</label>
+                <textarea id="review" name="review" required></textarea>
+                <button type="submit" class="btn">Submit Review</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript code
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sample data (replace with actual data fetching in a real application)
+            const appliedJobs = [
+                { id: 1, title: 'Plumbing Work', client: 'Alice Smith', date: '2024-09-20', status: 'Pending' },
+                { id: 2, title: 'Electrical Repair', client: 'Bob Johnson', date: '2024-09-22', status: 'Accepted' }
+            ];
+
+            const upcomingJobs = [
+                { id: 3, title: 'House Painting', client: 'Carol Brown', startDate: '2024-09-25', pay: '$500', duration: '3 days' }
+            ];
+
+            const activeJobs = [
+                { id: 4, title: 'Gardening', client: 'David Wilson', progress: 75 }
+            ];
+
+            const clientsToReview = [
+                { id: 5, name: 'Eve Taylor', jobTitle: 'Roof Repair' }
+            ];
+
+            // Function to create job cards
+            function createJobCard(job, type) {
+                const card = document.createElement('div');
+                card.className = 'job-card';
+                let content = '';
+
+                switch (type) {
+                    case 'applied':
+                        content = `
+                            <h4>${job.title}</h4>
+                            <p>Client: ${job.client}</p>
+                            <p>Application Date: ${job.date}</p>
+                            <p>Status: ${job.status}</p>
+                            <button class="btn" onclick="withdrawApplication(${job.id})">Withdraw Application</button>
+                            <button class="btn" onclick="viewJobDetails(${job.id})">View Details</button>
+                        `;
+                        break;
+                    case 'upcoming':
+                        content = `
+                            <h4>${job.title}</h4>
+                            <p>Client: ${job.client}</p>
+                            <p>Start Date: ${job.startDate}</p>
+                            <p>Pay: ${job.pay}</p>
+                            <p>Estimated Duration: ${job.duration}</p>
+                            <button class="btn" onclick="messageClient(${job.id})">Message Client</button>
+                            <button class="btn" onclick="viewJobDetails(${job.id})">View Details</button>
+                        `;
+                        break;
+                    case 'active':
+                        content = `
+                            <h4>${job.title}</h4>
+                            <p>Client: ${job.client}</p>
+                            <p>Progress: ${job.progress}%</p>
+                            <button class="btn" onclick="markJobCompleted(${job.id})">Mark as Completed</button>
+                            <button class="btn" onclick="viewJobDetails(${job.id})">View Details</button>
+                        `;
+                        break;
+                    case 'review':
+                        content = `
+                            <h4>${job.jobTitle}</h4>
+                            <p>Client: ${job.name}</p>
+                            <button class="btn" onclick="openRateClientModal(${job.id})">Rate Client</button>
+                        `;
+                        break;
+                }
+
+                card.innerHTML = content;
+                return card;
+            }
+
+            // Populate job sections
+            const currentlyAppliedJobsSection = document.getElementById('currentlyAppliedJobs');
+            appliedJobs.forEach(job => {
+                currentlyAppliedJobsSection.appendChild(createJobCard(job, 'applied'));
+            });
+
+            const upcomingJobsSection = document.getElementById('upcomingJobs');
+            upcomingJobs.forEach(job => {
+                upcomingJobsSection.appendChild(createJobCard(job, 'upcoming'));
+            });
+
+            const activeJobsSection = document.getElementById('activeJobs');
+            activeJobs.forEach(job => {
+                activeJobsSection.appendChild(createJobCard(job, 'active'));
+            });
+
+            const clientsToReviewSection = document.getElementById('clientsToReview');
+            clientsToReview.forEach(client => {
+                clientsToReviewSection.appendChild(createJobCard(client, 'review'));
+            });
+
+            // Modal functionality
+            const modal = document.getElementById('rateClientModal');
+            const closeBtn = modal.querySelector('.close');
+
+            closeBtn.onclick = function() {
+                modal.style.display = 'none';
+            }
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            }
+
+            // Form submission
+            const rateClientForm = document.getElementById('rateClientForm');
+            rateClientForm.onsubmit = function(e) {
+                e.preventDefault();
+                const rating = document.getElementById('rating').value;
+                const review = document.getElementById('review').value;
+                // Here you would typically send this data to your backend
+                console.log('Rating:', rating, 'Review:', review);
+                modal.style.display = 'none';
+                // You might want to update the UI to reflect the submitted review
+            }
+
+            // Mobile menu toggle
+            const hamburgerMenu = document.getElementById('hamburgerMenu');
+            const leftPane = document.getElementById('leftPane');
+
+            hamburgerMenu.addEventListener('click', function() {
+                leftPane.classList.toggle('active');
+            });
+
+            // Navigation
+        const navLinks = document.querySelectorAll('.left-pane ul li a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const section = this.getAttribute('data-section');
+                showSection(section);
+            });
+        });
+
+        function showSection(section) {
+            // Hide all sections
+            const allSections = document.querySelectorAll('.main-content > div');
+            allSections.forEach(s => s.style.display = 'block');
+
+            // Show the selected section
+            const selectedSection = document.querySelector(`.${section}-section`);
+            if (selectedSection) {
+                selectedSection.style.display = 'block';
+            } else {
+                console.error(`Section "${section}" not found`);
+            }
+
+            // Close mobile menu if open
+            leftPane.classList.remove('active');
+        }
+
+        // Function to open rate client modal
+        window.openRateClientModal = function(clientId) {
+            const modal = document.getElementById('rateClientModal');
+            modal.style.display = 'block';
+            // You might want to set the client ID in a hidden field in the form
+            document.getElementById('rateClientForm').dataset.clientId = clientId;
+        }
+
+        // Function to withdraw application
+        window.withdrawApplication = function(jobId) {
+            if (confirm('Are you sure you want to withdraw your application?')) {
+                // Here you would typically send a request to your backend to withdraw the application
+                console.log('Withdrawing application for job ID:', jobId);
+                // Then update the UI, e.g., remove the job card
+                const jobCard = document.querySelector(`.job-card[data-job-id="${jobId}"]`);
+                if (jobCard) {
+                    jobCard.remove();
+                }
+            }
+        }
+
+        // Function to view job details
+        window.viewJobDetails = function(jobId) {
+            // Here you would typically fetch job details from your backend
+            console.log('Viewing details for job ID:', jobId);
+            // Then display the details in a modal or navigate to a job details page
+            alert(`Viewing details for job ID: ${jobId}`);
+        }
+
+        // Function to message client
+        window.messageClient = function(jobId) {
+            // Here you would typically open a messaging interface or send an email
+            console.log('Messaging client for job ID:', jobId);
+            // For this example, we'll just show an alert
+            alert(`Opening messaging interface for job ID: ${jobId}`);
+        }
+
+        // Function to mark job as completed
+        window.markJobCompleted = function(jobId) {
+            if (confirm('Are you sure you want to mark this job as completed?')) {
+                // Here you would typically send a request to your backend to update the job status
+                console.log('Marking job as completed for job ID:', jobId);
+                // Then update the UI, e.g., move the job card to a 'Completed Jobs' section
+                const jobCard = document.querySelector(`.job-card[data-job-id="${jobId}"]`);
+                if (jobCard) {
+                    jobCard.remove();
+                    // You might want to add it to a 'Completed Jobs' section here
+                }
+            }
+        }
+
+        // Function to update profile
+        document.getElementById('updateProfileBtn').addEventListener('click', function() {
+            // Here you would typically navigate to a profile update page or open a modal
+            console.log('Updating profile');
+            alert('Navigating to profile update page');
+        });
+
+        // Function to link UPI
+        document.getElementById('linkUPIBtn').addEventListener('click', function() {
+            // Here you would typically open a UPI linking interface
+            console.log('Linking UPI');
+            alert('Opening UPI linking interface');
+        });
+
+        // Function to view transactions
+        document.getElementById('viewTransactionsBtn').addEventListener('click', function() {
+            // Here you would typically navigate to a transactions page or open a modal
+            console.log('Viewing transactions');
+            alert('Navigating to transactions page');
+        });
+
+        // Function to add a notification
+        function addNotification(message) {
+            const notificationList = document.getElementById('notificationList');
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            notificationList.appendChild(notification);
+        }
+
+        // Example of adding a notification
+        addNotification('New job available in your area!');
+
+        // Simulating real-time updates
+        setInterval(function() {
+            // Here you would typically fetch updates from your backend
+            // For this example, we'll just add a random notification every 30 seconds
+            const messages = [
+                'New payment received!',
+                'Your job application was accepted.',
+                'A client has left you a new review.',
+                'Reminder: You have an upcoming job tomorrow.'
+            ];
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            addNotification(randomMessage);
+        }, 30000);
+
+        // Function to update job progress
+        function updateJobProgress(jobId, progress) {
+            const jobCard = document.querySelector(`.job-card[data-job-id="${jobId}"]`);
+            if (jobCard) {
+                const progressElement = jobCard.querySelector('.job-progress');
+                if (progressElement) {
+                    progressElement.textContent = `Progress: ${progress}%`;
+                    progressElement.style.width = `${progress}%`;
+                }
+            }
+        }
+
+        // Simulating job progress updates
+        setInterval(function() {
+            // Here you would typically fetch job progress from your backend
+            // For this example, we'll just update a random active job
+            const activeJobCards = document.querySelectorAll('#activeJobs .job-card');
+            if (activeJobCards.length > 0) {
+                const randomJob = activeJobCards[Math.floor(Math.random() * activeJobCards.length)];
+                const jobId = randomJob.dataset.jobId;
+                const currentProgress = parseInt(randomJob.querySelector('.job-progress').style.width) || 0;
+                const newProgress = Math.min(currentProgress + 10, 100);
+                updateJobProgress(jobId, newProgress);
+            }
+        }, 10000);
+
+        // Function to format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+        }
+
+        // Function to update earnings
+        function updateEarnings(currentBalance, totalEarnings) {
+            const earningsSummary = document.querySelector('.earnings-summary');
+            earningsSummary.querySelector('p:nth-child(2)').textContent = `Current Balance: ${formatCurrency(currentBalance)}`;
+            earningsSummary.querySelector('p:nth-child(3)').textContent = `Total Earnings: ${formatCurrency(totalEarnings)}`;
+        }
+
+        // Simulating earnings updates
+        setInterval(function() {
+            // Here you would typically fetch updated earnings from your backend
+            // For this example, we'll just increase the earnings slightly
+            const currentBalance = 500 + Math.random() * 100;
+            const totalEarnings = 5000 + Math.random() * 1000;
+            updateEarnings(currentBalance, totalEarnings);
+        }, 6000);
+
+        // Initialize the dashboard
+        showSection('dashboard');
+    });
+</script>
+</body>
+</html>

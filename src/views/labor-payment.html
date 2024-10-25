@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payments Page</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+
+        /* Layout */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Header styles */
+        header {
+            background-color: #fff;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00978A;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 1rem;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .search-bar input {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        /* Left pane styles */
+        .left-pane {
+            width: 250px;
+            background-color: #fff;
+            padding: 1rem;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100%;
+            top: 60px;
+        }
+
+        .left-pane ul {
+            list-style: none;
+        }
+
+        .left-pane ul li {
+            margin-bottom: 1rem;
+        }
+
+        .left-pane ul li a {
+            text-decoration: none;
+            color: #333;
+            display: block;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .left-pane ul li a:hover,
+        .left-pane ul li a.active {
+            background-color: #00978A;
+            color: #fff;
+        }
+
+        /* Main content styles */
+        .main-content {
+            flex-grow: 1;
+            padding: 2rem;
+            margin-left: 250px;
+            margin-top: 60px;
+        }
+
+        /* Payment summary styles */
+        .payment-summary {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .summary-box {
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex-basis: 30%;
+        }
+
+        .summary-box h3 {
+            margin-bottom: 0.5rem;
+            color: #465FA2;
+        }
+        .summary-box li {
+            list-style: none;
+        }
+
+        .summary-box .amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00978A;
+        }
+
+        /* Transaction history styles */
+        .transaction-history {
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .filter-search {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .filter-search select,
+        .filter-search input {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+            color: #465FA2;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .view-details {
+            background-color: #00978A;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .view-details:hover {
+            background-color: #007a6e;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 1rem;
+            top: 0.5rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Footer styles */
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+
+        footer a {
+            color: #fff;
+            margin: 0 0.5rem;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .left-pane {
+                width: 100%;
+                position: static;
+                height: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .payment-summary {
+                flex-direction: column;
+            }
+
+            .summary-box {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">JobBoard</div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="#">Profile</a></li>
+                </ul>
+            </nav>
+            <div class="search-bar">
+                <input type="text" placeholder="Search...">
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="left-pane">
+            <ul>
+                <li><a href="labor-dashboard.html">Dashboard</a></li>
+                <li><a href="labor-availableJobs.html">Available Jobs</a></li>
+                <li><a href="#" class="active">Payments</a></li>
+                <li><a href="labor-group.html">Groups</a></li>
+                <li><a href="labor-pastJob.html">Past Jobs</a></li>
+                <li><a href="labor-profile.html">My Profile</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <h1>Payments</h1>
+            <div class="payment-summary">
+                <div class="summary-box">
+                    <h3>Total Earnings</h3>
+                    <div class="amount">$5,000.00</div>
+                </div>
+                <div class="summary-box">
+                    <h3>Pending Payments</h3>
+                    <div class="amount">$500.00</div>
+                    <p>Awaiting Client Confirmation</p>
+                </div>
+                <div class="summary-box">
+                    <h3>Recent Transactions</h3>
+                    <ul id="recent-transactions">
+                        <!-- Recent transactions will be dynamically populated here -->
+                    </ul>
+                </div>
+            </div>
+
+            <div class="transaction-history">
+                <h2>Transaction History</h2>
+                <div class="filter-search">
+                    <div>
+                        <select id="date-filter">
+                            <option value="">All Dates</option>
+                            <option value="7">Last 7 days</option>
+                            <option value="30">Last 30 days</option>
+                            <option value="90">Last 90 days</option>
+                        </select>
+                        <select id="status-filter">
+                            <option value="">All Statuses</option>
+                            <option value="completed">Completed</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                    <input type="text" id="search-transactions" placeholder="Search transactions...">
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Job ID</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transaction-list">
+                        <!-- Transaction list will be dynamically populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="payment-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Payment Details</h2>
+            <div id="modal-content">
+                <!-- Payment details will be dynamically populated here -->
+            </div>
+            <button id="dispute-payment">Dispute Payment</button>
+            <button id="contact-support">Contact Support</button>
+        </div>
+    </div>
+
+    <footer>
+        <a href="#">About Us</a>
+        <a href="#">Terms and Conditions</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Contact Us</a>
+        <div class="social-media">
+            <!-- Add social media icons here -->
+        </div>
+    </footer>
+
+    <script>
+        // Sample data for transactions
+        const transactions = [
+            { id: 1, date: '2024-09-10', jobId: 'JOB001', description: 'Web Development Project', amount: 1000, status: 'Completed' },
+            { id: 2, date: '2024-09-08', jobId: 'JOB002', description: 'Logo Design', amount: 250, status: 'Pending' },
+            { id: 3, date: '2024-09-05', jobId: 'JOB003', description: 'Content Writing', amount: 500, status: 'Completed' },
+            // Add more sample transactions here
+        ];
+
+        // Function to populate recent transactions
+        function populateRecentTransactions() {
+            const recentTransactions = document.getElementById('recent-transactions');
+            recentTransactions.innerHTML = '';
+            transactions.slice(0, 3).forEach(transaction => { 
+                const li = document.createElement('li');
+                li.textContent = `${transaction.date}: $${transaction.amount} - ${transaction.status}`;
+                recentTransactions.appendChild(li);
+            });
+        }
+
+        // Function to populate transaction list
+        function populateTransactionList() {
+            const transactionList = document.getElementById('transaction-list');
+            transactionList.innerHTML = '';
+            transactions.forEach(transaction => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${transaction.date}</td>
+                    <td>${transaction.jobId}</td>
+                    <td>${transaction.description}</td>
+                    <td>$${transaction.amount}</td>
+                    <td>${transaction.status}</td>
+                    <td><button class="view-details" data-id="${transaction.id}">View Details</button></td>
+                `;
+                transactionList.appendChild(row);
+            });
+        }
+
+        // Function to filter transactions
+        function filterTransactions() {
+            const dateFilter = document.getElementById('date-filter').value;
+            const statusFilter = document.getElementById('status-filter').value;
+            const searchQuery = document.getElementById('search-transactions').value.toLowerCase();
+
+            const filteredTransactions = transactions.filter(transaction => {
+                const dateMatch = dateFilter ? (new Date(transaction.date) >= new Date(Date.now() - dateFilter * 24 * 60 * 60 * 1000)) : true;
+                const statusMatch = statusFilter ? transaction.status.toLowerCase() === statusFilter : true;
+                const searchMatch = transaction.description.toLowerCase().includes(searchQuery) || 
+                                    transaction.jobId.toLowerCase().includes(searchQuery);
+                return dateMatch && statusMatch && searchMatch;
+            });
+
+            const transactionList = document.getElementById('transaction-list');
+            transactionList.innerHTML = '';
+            filteredTransactions.forEach(transaction => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${transaction.date}</td>
+                    <td>${transaction.jobId}</td>
+                    <td>${transaction.description}</td>
+                    <td>$${transaction.amount}</td>
+                    <td>${transaction.status}</td>
+                    <td><button class="view-details" data-id="${transaction.id}">View Details</button></td>
+                `;
+                transactionList.appendChild(row);
+            });
+        }
+
+        // Function to show payment details modal
+        function showPaymentDetails(transactionId) {
+            const transaction = transactions.find(t => t.id === transactionId);
+            if (transaction) {
+                const modalContent = document.getElementById('modal-content');
+                modalContent.innerHTML = `
+                    <p><strong>Date:</strong> ${transaction.date}</p>
+                    <p><strong>Job ID:</strong> ${transaction.jobId}</p>
+                    <p><strong>Description:</strong> ${transaction.description}</p>
+                    <p><strong>Amount:</strong> $${transaction.amount}</p>
+                    <p><strong>Status:</strong> ${transaction.status}</p>
+                `;
+                document.getElementById('payment-modal').style.display = 'block';
+            }
+        }
+
+                // Event listeners
+                document.addEventListener('DOMContentLoaded', () => {
+            populateRecentTransactions();
+            populateTransactionList();
+
+            document.getElementById('date-filter').addEventListener('change', filterTransactions);
+            document.getElementById('status-filter').addEventListener('change', filterTransactions);
+            document.getElementById('search-transactions').addEventListener('input', filterTransactions);
+
+            document.getElementById('transaction-list').addEventListener('click', (event) => {
+                if (event.target.classList.contains('view-details')) {
+                    const transactionId = parseInt(event.target.getAttribute('data-id'));
+                    showPaymentDetails(transactionId);
+                }
+            });
+
+            document.querySelector('.modal .close').addEventListener('click', () => {
+                document.getElementById('payment-modal').style.display = 'none';
+            });
+
+            // Close modal when clicking outside of the modal content
+            window.addEventListener('click', (event) => {
+                if (event.target === document.getElementById('payment-modal')) {
+                    document.getElementById('payment-modal').style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Past Jobs - Labor Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+    --primary-color: #00978A;
+    --secondary-color: #465FA2;
+    --background-color: #f5f5f5;
+    --text-color: #333;
+    --card-background: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+.main-container {
+    display: flex;
+    min-height: calc(100vh - 60px - 50px); /* Subtract header and footer heights */
+}
+
+/* Header Styles */
+header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+}
+
+header .logo img {
+    height: 40px;
+}
+
+header nav ul {
+    display: flex;
+    list-style-type: none;
+}
+
+header nav ul li {
+    margin-left: 20px;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.user-profile img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+/* Left Pane Styles */
+.left-pane {
+    width: 200px;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 2px 0 5px var(--shadow-color);
+}
+
+.left-pane nav ul {
+    list-style-type: none;
+}
+
+.left-pane nav ul li {
+    margin-bottom: 15px;
+}
+
+.left-pane nav ul li a {
+    color: var(--text-color);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.left-pane nav ul li a i {
+    margin-right: 10px;
+    width: 20px;
+}
+
+.left-pane nav ul li.active a {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+/* Main Content Styles */
+main {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+h1 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.subheading {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Search and Filter Styles */
+.search-filter-container {
+    margin-bottom: 20px;
+}
+
+#search-bar {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.filters {
+    display: flex;
+    gap: 10px;
+}
+
+.filters select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: white;
+}
+
+/* Job List Styles */
+.job-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.job-card {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.job-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px var(--shadow-color);
+}
+
+.job-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.job-card .client-name {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.job-card .job-status {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    margin-bottom: 5px;
+}
+
+.job-card .job-status.completed {
+    background-color: #e6f7e6;
+    color: #2e7d32;
+}
+
+.job-card .job-status.canceled {
+    background-color: #fde8e8;
+    color: #c62828;
+}
+
+.job-card .job-status.pending {
+    background-color: #fff3e0;
+    color: #ef6c00;
+}
+
+.job-card .job-date,
+.job-card .payment-details,
+.job-card .rating-review {
+    margin-bottom: 5px;
+}
+
+.job-card .rating {
+    color: #ffc107;
+}
+
+/* Job Analytics Styles */
+.job-analytics {
+    width: 250px;
+    background-color: white;
+    padding: 20px;
+    box-shadow: -2px 0 5px var(--shadow-color);
+}
+
+.job-analytics h2 {
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+}
+
+.analytics-item {
+    margin-bottom: 20px;
+}
+
+.analytics-item h3 {
+    font-size: 1em;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.analytics-item p {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.analytics-item ul {
+    list-style-type: none;
+}
+
+.analytics-item ul li {
+    margin-bottom: 5px;
+}
+
+/* Footer Styles */
+footer {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+    margin-right: 15px;
+}
+
+.social-media a {
+    font-size: 1.2em;
+    margin-left: 10px;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#download-invoice {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+#download-invoice:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .main-container {
+        flex-direction: column;
+    }
+
+    .left-pane {
+        width: 100%;
+        order: -1;
+    }
+
+    .job-analytics {
+        width: 100%;
+        order: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .filters {
+        flex-wrap: wrap;
+    }
+
+    .filters select {
+        flex: 1 0 calc(50% - 5px);
+    }
+
+    .job-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        flex-direction: column;
+        height: auto;
+        padding: 10px;
+    }
+
+    header nav ul {
+        margin-top: 10px;
+    }
+
+    .user-profile {
+        margin-top: 10px;
+    }
+
+    .filters select {
+        flex: 1 0 100%;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 5% auto;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.job-card {
+    animation: fadeIn 0.3s ease-in;
+}
+
+/* Accessibility */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Focus styles for better keyboard navigation */
+a:focus, button:focus, input:focus, select:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+    header, .left-pane, .job-analytics, footer {
+        display: none;
+    }
+
+    body {
+        font-size: 12pt;
+    }
+
+    .job-card {
+        page-break-inside: avoid;
+    }
+}
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="/api/placeholder/150/50" alt="Labor Platform Logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+        </nav>
+        <div class="user-profile">
+            <img src="/api/placeholder/40/40" alt="User Avatar">
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="left-pane">
+            <nav>
+                <ul>
+                    <li><a href="labor-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="labor-availableJobs.html"><i class="fas fa-briefcase"></i> Available Jobs</a></li>
+                    <li><a href="labor-payment.html"><i class="fas fa-money-bill-wave"></i> Payments</a></li>
+                    <li><a href="labor-group.html"><i class="fas fa-users"></i> Groups</a></li>
+                    <li class="active"><a href="#"><i class="fas fa-history"></i> Past Jobs</a></li>
+                    <li><a href="labor-profile.html"><i class="fas fa-user"></i> My Profile</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main>
+            <h1>Past Jobs</h1>
+            <p class="subheading">Review your completed jobs and track your performance.</p>
+
+            <div class="search-filter-container">
+                <input type="text" id="search-bar" placeholder="Search past jobs...">
+                <div class="filters">
+                    <select id="date-range">
+                        <option value="">Date Range</option>
+                        <option value="last-month">Last Month</option>
+                        <option value="last-year">Last Year</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                    <select id="job-type">
+                        <option value="">Job Type</option>
+                        <option value="masonry">Masonry</option>
+                        <option value="carpentry">Carpentry</option>
+                        <option value="electrical">Electrical</option>
+                        <option value="plumbing">Plumbing</option>
+                    </select>
+                    <select id="payment-status">
+                        <option value="">Payment Status</option>
+                        <option value="completed">Completed</option>
+                        <option value="pending">Pending</option>
+                        <option value="refunded">Refunded</option>
+                    </select>
+                    <select id="rating">
+                        <option value="">Rating</option>
+                        <option value="5">5 Star</option>
+                        <option value="4">4 Star</option>
+                        <option value="3">3 Star</option>
+                        <option value="2">2 Star</option>
+                        <option value="1">1 Star</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="job-list" class="job-list">
+                <!-- Job cards will be dynamically inserted here -->
+            </div>
+        </main>
+
+        <aside class="job-analytics">
+            <h2>Job Analytics</h2>
+            <div class="analytics-item">
+                <h3>Total Jobs Completed</h3>
+                <p id="total-jobs">0</p>
+            </div>
+            <div class="analytics-item">
+                <h3>Total Earnings</h3>
+                <p id="total-earnings">₹0</p>
+            </div>
+            <div class="analytics-item">
+                <h3>Average Client Rating</h3>
+                <div id="average-rating"></div>
+            </div>
+            <div class="analytics-item">
+                <h3>Most Frequent Clients</h3>
+                <ul id="frequent-clients"></ul>
+            </div>
+            <div class="analytics-item">
+                <h3>Most Common Job Types</h3>
+                <ul id="common-job-types"></ul>
+            </div>
+        </aside>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Terms and Conditions</a>
+            <a href="#">Support</a>
+            <a href="#">FAQ</a>
+        </div>
+        <div class="social-media">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </footer>
+
+    <div id="job-details-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-job-title"></h2>
+            <div id="modal-client-info"></div>
+            <div id="modal-job-description"></div>
+            <div id="modal-payment-breakdown"></div>
+            <div id="modal-review-section"></div>
+            <button id="download-invoice">Download Invoice</button>
+        </div>
+    </div>
+
+    <script>
+        // Sample data (replace with actual data fetching logic)
+const pastJobs = [
+    {
+        id: 1,
+        title: "Kitchen Renovation",
+        clientName: "John Doe",
+        status: "completed",
+        startDate: "2023-08-15",
+        endDate: "2023-08-20",
+        payment: 15000,
+        paymentStatus: "Paid",
+        rating: 5,
+        review: "Excellent work! Very professional and timely.",
+        jobType: "Carpentry"
+    },
+    {
+        id: 2,
+        title: "Electrical Wiring",
+        clientName: "Jane Smith",
+        status: "completed",
+        startDate: "2023-09-01",
+        endDate: "2023-09-03",
+        payment: 8000,
+        paymentStatus: "Paid",
+        rating: 4,
+        review: "Good job, but took a bit longer than expected.",
+        jobType: "Electrical"
+    },
+    // Add more sample jobs here...
+];
+
+// DOM Elements
+const jobList = document.getElementById('job-list');
+const searchBar = document.getElementById('search-bar');
+const dateRangeFilter = document.getElementById('date-range');
+const jobTypeFilter = document.getElementById('job-type');
+const paymentStatusFilter = document.getElementById('payment-status');
+const ratingFilter = document.getElementById('rating');
+const modal = document.getElementById('job-details-modal');
+const closeModal = document.getElementsByClassName('close')[0];
+const downloadInvoiceBtn = document.getElementById('download-invoice');
+
+// Analytics Elements
+const totalJobsElement = document.getElementById('total-jobs');
+const totalEarningsElement = document.getElementById('total-earnings');
+const averageRatingElement = document.getElementById('average-rating');
+const frequentClientsElement = document.getElementById('frequent-clients');
+const commonJobTypesElement = document.getElementById('common-job-types');
+
+// Render job cards
+function renderJobs(jobs) {
+    jobList.innerHTML = '';
+    jobs.forEach(job => {
+        const jobCard = document.createElement('div');
+        jobCard.className = 'job-card';
+        jobCard.innerHTML = `
+            <h3>${job.title}</h3>
+            <p class="client-name">${job.clientName}</p>
+            <span class="job-status ${job.status}">${job.status}</span>
+            <p class="job-date">From: ${job.startDate} To: ${job.endDate}</p>
+            <p class="payment-details">Payment: ₹${job.payment} (${job.paymentStatus})</p>
+            <div class="rating-review">
+                <span class="rating">${'★'.repeat(job.rating)}${'☆'.repeat(5 - job.rating)}</span>
+                <p>${job.review}</p>
+            </div>
+        `;
+        jobCard.addEventListener('click', () => openModal(job));
+        jobList.appendChild(jobCard);
+    });
+}
+
+// Filter jobs
+function filterJobs() {
+    const searchTerm = searchBar.value.toLowerCase();
+    const dateRange = dateRangeFilter.value;
+    const jobType = jobTypeFilter.value;
+    const paymentStatus = paymentStatusFilter.value;
+    const rating = ratingFilter.value;
+
+    const filteredJobs = pastJobs.filter(job => {
+        const matchesSearch = job.title.toLowerCase().includes(searchTerm) ||
+                              job.clientName.toLowerCase().includes(searchTerm);
+        const matchesJobType = !jobType || job.jobType === jobType;
+        const matchesPaymentStatus = !paymentStatus || job.paymentStatus.toLowerCase() === paymentStatus;
+        const matchesRating = !rating || job.rating >= parseInt(rating);
+
+        // Implement date range filtering logic here
+        // For simplicity, we're not implementing it in this example
+
+        return matchesSearch && matchesJobType && matchesPaymentStatus && matchesRating;
+    });
+
+    renderJobs(filteredJobs);
+    updateAnalytics(filteredJobs);
+}
+
+// Open modal with job details
+function openModal(job) {
+    const modalTitle = document.getElementById('modal-job-title');
+    const modalClientInfo = document.getElementById('modal-client-info');
+    const modalJobDescription = document.getElementById('modal-job-description');
+    const modalPaymentBreakdown = document.getElementById('modal-payment-breakdown');
+    const modalReviewSection = document.getElementById('modal-review-section');
+
+    modalTitle.textContent = job.title;
+    modalClientInfo.innerHTML = `<h3>Client: ${job.clientName}</h3>`;
+    modalJobDescription.innerHTML = `
+        <h3>Job Details</h3>
+        <p>Status: ${job.status}</p>
+        <p>Start Date: ${job.startDate}</p>
+        <p>End Date: ${job.endDate}</p>
+        <p>Job Type: ${job.jobType}</p>
+    `;
+    modalPaymentBreakdown.innerHTML = `
+        <h3>Payment Details</h3>
+        <p>Total Amount: ₹${job.payment}</p>
+        <p>Status: ${job.paymentStatus}</p>
+    `;
+    modalReviewSection.innerHTML = `
+        <h3>Client Review</h3>
+        <p>Rating: ${'★'.repeat(job.rating)}${'☆'.repeat(5 - job.rating)}</p>
+        <p>${job.review}</p>
+    `;
+
+    modal.style.display = 'block';
+}
+
+// Close modal
+function closeModalHandler() {
+    modal.style.display = 'none';
+}
+
+// Update analytics
+function updateAnalytics(jobs) {
+    const totalJobs = jobs.length;
+    const totalEarnings = jobs.reduce((sum, job) => sum + job.payment, 0);
+    const averageRating = jobs.reduce((sum, job) => sum + job.rating, 0) / totalJobs || 0;
+
+    totalJobsElement.textContent = totalJobs;
+    totalEarningsElement.textContent = `₹${totalEarnings}`;
+    averageRatingElement.innerHTML = `${'★'.repeat(Math.round(averageRating))}${'☆'.repeat(5 - Math.round(averageRating))} (${averageRating.toFixed(1)})`;
+
+    // Calculate and display most frequent clients
+    const clientCounts = jobs.reduce((counts, job) => {
+        counts[job.clientName] = (counts[job.clientName] || 0) + 1;
+        return counts;
+    }, {});
+    const sortedClients = Object.entries(clientCounts).sort((a, b) => b[1] - a[1]).slice(0, 3);
+    frequentClientsElement.innerHTML = sortedClients.map(([client, count]) => `<li>${client} (${count} jobs)</li>`).join('');
+
+    // Calculate and display most common job types
+    const jobTypeCounts = jobs.reduce((counts, job) => {
+        counts[job.jobType] = (counts[job.jobType] || 0) + 1;
+        return counts;
+    }, {});
+    const sortedJobTypes = Object.entries(jobTypeCounts).sort((a, b) => b[1] - a[1]).slice(0, 3);
+    commonJobTypesElement.innerHTML = sortedJobTypes.map(([type, count]) => `<li>${type} (${count} jobs)</li>`).join('');
+}
+
+// Event listeners
+searchBar.addEventListener('input', filterJobs);
+dateRangeFilter.addEventListener('change', filterJobs);
+jobTypeFilter.addEventListener('change', filterJobs);
+paymentStatusFilter.addEventListener('change', filterJobs);
+ratingFilter.addEventListener('change', filterJobs);
+closeModal.addEventListener('click', closeModalHandler);
+window.addEventListener('click', (event) => {
+    if (event.target == modal) {
+        closeModalHandler();
+    }
+});
+
+downloadInvoiceBtn.addEventListener('click', () => {
+    alert('Invoice download functionality to be implemented');
+});
+
+// Initial render
+renderJobs(pastJobs);
+updateAnalytics(pastJobs);
+
+// Lazy loading implementation
+let page = 1;
+const itemsPerPage = 10;
+
+function loadMoreJobs() {
+    // In a real implementation, you would fetch more jobs from the server here
+    // For this example, we'll just simulate loading more jobs
+    const nextJobs = pastJobs.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
+    if (nextJobs.length > 0) {
+        renderJobs([...Array.from(jobList.children).map(card => ({
+            title: card.querySelector('h3').textContent,
+            clientName: card.querySelector('.client-name').textContent,
+            status: card.querySelector('.job-status').textContent,
+            startDate: card.querySelector('.job-date').textContent.split('From: ')[1].split(' To:')[0],
+            endDate: card.querySelector('.job-date').textContent.split('To: ')[1],
+            payment: parseFloat(card.querySelector('.payment-details').textContent.split('₹')[1].split(' ')[0]),
+            paymentStatus: card.querySelector('.payment-details').textContent.split('(')[1].split(')')[0],
+            rating: card.querySelector('.rating').textContent.split('★').length - 1,
+            review: card.querySelector('.rating-review p').textContent
+        })), ...nextJobs]);
+        page++;
+    }
+}
+
+// Intersection Observer for infinite scrolling
+const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+        loadMoreJobs();
+    }
+}, { threshold: 1 });
+
+// Observe the last job card
+function observeLastJob() {
+    const lastJob = jobList.lastElementChild;
+    if (lastJob) {
+        observer.observe(lastJob);
+    }
+}
+
+// Call observeLastJob after initial render and each time new jobs are added
+renderJobs(pastJobs.slice(0, itemsPerPage));
+observeLastJob();
+    </script>
+</body>
+</html>

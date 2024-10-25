@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KaamSetu - Labor Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00978A;
+            --secondary-color: #465FA2;
+            --background-color: #F9F9F9;
+            --text-color: #333;
+            --white: #FFFFFF;
+            --light-gray: #E0E0E0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 10px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Main Content Styles */
+        main {
+            padding: 20px 0;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .widget {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .widget h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        /* Job Status Overview Styles */
+        .job-status-list {
+            list-style-type: none;
+        }
+
+        .job-status-item {
+            margin-bottom: 10px;
+        }
+
+        .job-status-item span {
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: var(--light-gray);
+            border-radius: 5px;
+            overflow: hidden;
+            height: 10px;
+            margin-top: 5px;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0;
+            transition: width 0.5s ease;
+        }
+
+        /* Group/Clan Widget Styles */
+        .group-info {
+            margin-bottom: 15px;
+        }
+
+        .group-info p {
+            margin-bottom: 5px;
+        }
+
+        .create-manage-group {
+            margin-top: 15px;
+        }
+
+        /* Payments Overview Styles */
+        .payment-info {
+            margin-bottom: 15px;
+        }
+
+        .payment-info p {
+            margin-bottom: 5px;
+        }
+
+        /* Job Recommendations Styles */
+        .job-recommendation {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .job-recommendation:last-child {
+            border-bottom: none;
+        }
+
+        .bid-now-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .bid-now-btn:hover {
+            background-color: #007a70;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav ul {
+                flex-direction: column;
+            }
+
+            nav ul li {
+                margin-left: 0;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="/api/placeholder/50/50" alt="KaamSetu Logo">
+                    <h1>KaamSetu</h1>
+                </div>
+                <div class="user-info">
+                    <img src="/api/placeholder/40/40" alt="User Profile">
+                    <span>John Doe</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#dashboard">Dashboard</a></li>
+                        <li><a href="#jobs">Jobs</a></li>
+                        <li><a href="#groups">Groups/Clan</a></li>
+                        <li><a href="#payments">Payments</a></li>
+                        <li><a href="#reviews">Reviews</a></li>
+                        <li><a href="#profile">Profile</a></li>
+                        <li><a href="#support">Support & FAQ</a></li>
+                        <li><a href="#logout">Log out</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="dashboard-grid">
+                <!-- Job Status Overview Widget -->
+                <div class="widget job-status">
+                    <h2>Job Status Overview</h2>
+                    <ul class="job-status-list">
+                        <li class="job-status-item">
+                            <span>Current Jobs:</span> 2
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 60%;"></div>
+                            </div>
+                        </li>
+                        <li class="job-status-item">
+                            <span>Pending Jobs:</span> 3
+                        </li>
+                        <li class="job-status-item">
+                            <span>Upcoming Jobs:</span> 1
+                        </li>
+                        <li class="job-status-item">
+                            <span>Completed Jobs:</span> 15
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Group/Clan Widget -->
+                <div class="widget group-clan">
+                    <h2>Group/Clan</h2>
+                    <div class="group-info">
+                        <p><strong>Group Status:</strong> Active</p>
+                        <p><strong>Number of Members:</strong> 5</p>
+                        <p><strong>Active Group Jobs:</strong> 1</p>
+                    </div>
+                    <div class="create-manage-group">
+                        <button class="bid-now-btn">Create/Manage Groups</button>
+                    </div>
+                </div>
+
+                <!-- Payments Overview Widget -->
+                <div class="widget payments">
+                    <h2>Payments Overview</h2>
+                    <div class="payment-info">
+                        <p><strong>Total Earnings:</strong> ₹50,000</p>
+                        <p><strong>Pending Payments:</strong> ₹5,000</p>
+                        <p><strong>Latest Withdrawal:</strong> ₹10,000 (2023-09-10)</p>
+                    </div>
+                    <button class="bid-now-btn">Request Withdrawal</button>
+                </div>
+
+                <!-- Job Recommendations Widget -->
+                <div class="widget job-recommendations">
+                    <h2>Job Recommendations</h2>
+                    <div class="job-recommendation">
+                        <h3>Masonry Work</h3>
+                        <p>Location: Mumbai</p>
+                        <p>Payment: ₹5,000</p>
+                        <button class="bid-now-btn">Bid Now</button>
+                    </div>
+                    <div class="job-recommendation">
+                        <h3>Electrical Repair</h3>
+                        <p>Location: Delhi</p>
+                        <p>Payment: ₹3,000</p>
+                        <button class="bid-now-btn">Bid Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // JavaScript for KaamSetu Labor Dashboard
+
+        // Simulated data for demonstration purposes
+        const jobData = {
+            currentJobs: 2,
+            pendingJobs: 3,
+            upcomingJobs: 1,
+            completedJobs: 15
+        };
+
+        const groupData = {
+            status: 'Active',
+            members: 5,
+            activeJobs: 1
+        };
+
+        const paymentData = {
+            totalEarnings: 50000,
+            pendingPayments: 5000,
+            latestWithdrawal: {
+                amount: 10000,
+                date: '2023-09-10'
+            }
+        };
+
+        const jobRecommendations = [
+            { title: 'Masonry Work', location: 'Mumbai', payment: 5000 },
+            { title: 'Electrical Repair', location: 'Delhi', payment: 3000 }
+        ];
+
+        // Function to update job status
+        function updateJobStatus() {
+            document.querySelector('.job-status-list').innerHTML = `
+                <li class="job-status-item">
+                    <span>Current Jobs:</span> ${jobData.currentJobs}
+                    <div class="progress-bar">
+                        <div class="progress" style="width: ${(jobData.currentJobs / (jobData.currentJobs + jobData.pendingJobs + jobData.upcomingJobs)) * 100}%;"></div>
+                    </div>
+                </li>
+                <li class="job-status-item">
+                    <span>Pending Jobs:</span> ${jobData.pendingJobs}
+                </li>
+                <li class="job-status-item">
+                    <span>Upcoming Jobs:</span> ${jobData.upcomingJobs}
+                </li>
+                <li class="job-status-item">
+                    <span>Completed Jobs:</span> ${jobData.completedJobs}
+                </li>
+            `;
+        }
+
+        // Function to update group/clan information
+        function updateGroupInfo() {
+            document.querySelector('.group-info').innerHTML = `
+                <p><strong>Group Status:</strong> ${groupData.status}</p>
+                <p><strong>Number of Members:</strong> ${groupData.members}</p>
+                <p><strong>Active Group Jobs:</strong> ${groupData.activeJobs}</p>
+            `;
+        }
+
+        // Function to update payment information
+        function updatePaymentInfo() {
+            document.querySelector('.payment-info').innerHTML = `
+                <p><strong>Total Earnings:</strong> ₹${paymentData.totalEarnings}</p>
+                <p><strong>Pending Payments:</strong> ₹${paymentData.pendingPayments}</p>
+                <p><strong>Latest Withdrawal:</strong> ₹${paymentData.latestWithdrawal.amount} (${paymentData.latestWithdrawal.date})</p>
+            `;
+        }
+
+        // Function to update job recommendations
+        function updateJobRecommendations() {
+            const recommendationsContainer = document.querySelector('.job-recommendations');
+            recommendationsContainer.innerHTML = '<h2>Job Recommendations</h2>';
+            
+            jobRecommendations.forEach(job => {
+                const jobElement = document.createElement('div');
+                jobElement.classList.add('job-recommendation');
+                jobElement.innerHTML = `
+                    <h3>${job.title}</h3>
+                    <p>Location: ${job.location}</p>
+                    <p>Payment: ₹${job.payment}</p>
+                    <button class="bid-now-btn">Bid Now</button>
+                `;
+                recommendationsContainer.appendChild(jobElement);
+            });
+        }
+
+        // Function to handle bid now button clicks
+        function handleBidNow(event) {
+            if (event.target.classList.contains('bid-now-btn')) {
+                alert('Bid placed successfully!');
+                // Here you would typically send the bid to the server
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            updateJobStatus();
+            updateGroupInfo();
+            updatePaymentInfo();
+            updateJobRecommendations();
+
+            document.querySelector('.job-recommendations').addEventListener('click', handleBidNow);
+        });
+
+        // Simulated real-time updates (for demonstration purposes)
+        setInterval(() => {
+            jobData.currentJobs = Math.floor(Math.random() * 5) + 1;
+            jobData.pendingJobs = Math.floor(Math.random() * 5) + 1;
+            updateJobStatus();
+        }, 5000);
+    </script>
+</body>
+</html>

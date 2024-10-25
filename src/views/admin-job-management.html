@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KaamSetu Admin Dashboard - Job Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00978A;
+            --secondary-color: #465FA2;
+            --background-color: #f4f4f4;
+            --text-color: #333;
+            --light-gray: #e0e0e0;
+            --white: #ffffff;
+            --red: #ff6b6b;
+            --green: #51cf66;
+            --blue: #339af0;
+            --yellow: #fcc419;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar ul li a {
+            color: var(--white);
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar ul li a:hover,
+        .sidebar ul li a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--white);
+            padding: 10px 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .top-nav h1 {
+            color: var(--primary-color);
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-icons i {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            cursor: pointer;
+        }
+
+        /* Search and Filter Section */
+        .search-filter {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-filter input,
+        .search-filter select {
+            padding: 10px;
+            border: 1px solid var(--light-gray);
+            border-radius: 5px;
+        }
+
+        .search-filter button {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-filter button:hover {
+            background-color: #007f75;
+        }
+
+        /* Job Listings Table */
+        .job-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--white);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .job-table th,
+        .job-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .job-table th {
+            background-color: var(--primary-color);
+            color: var(--white);
+            cursor: pointer;
+        }
+
+        .job-table th:hover {
+            background-color: #007f75;
+        }
+
+        .job-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .job-table tr:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Status Tags */
+        .status-tag {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-ongoing {
+            background-color: var(--green);
+            color: var(--white);
+        }
+
+        .status-completed {
+            background-color: var(--blue);
+            color: var(--white);
+        }
+
+        .status-disputed {
+            background-color: var(--red);
+            color: var(--white);
+        }
+
+        .status-pending {
+            background-color: var(--yellow);
+            color: var(--text-color);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-buttons button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--secondary-color);
+            transition: color 0.3s;
+        }
+
+        .action-buttons button:hover {
+            color: var(--primary-color);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            padding: 5px 10px;
+            margin: 0 5px;
+            background-color: var(--white);
+            border: 1px solid var(--light-gray);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .pagination button:hover,
+        .pagination button.active {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .job-table {
+                font-size: 0.9rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h2>KaamSetu Admin</h2>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Job Management</a></li>
+                    <li><a href="#">User Management</a></li>
+                    <li><a href="#">Reports</a></li>
+                    <li><a href="#">Settings</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <nav class="top-nav">
+                <h1>Job Management</h1>
+                <div class="nav-icons">
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            </nav>
+            <section class="search-filter">
+                <input type="text" id="search-input" placeholder="Search jobs...">
+                <select id="status-filter">
+                    <option value="">All Statuses</option>
+                    <option value="ongoing">Ongoing</option>
+                    <option value="completed">Completed</option>
+                    <option value="disputed">Disputed</option>
+                    <option value="pending">Pending</option>
+                </select>
+                <select id="category-filter">
+                    <option value="">All Categories</option>
+                    <option value="construction">Construction</option>
+                    <option value="plumbing">Plumbing</option>
+                    <option value="electrical">Electrical</option>
+                </select>
+                <input type="date" id="date-from">
+                <input type="date" id="date-to">
+                <button id="apply-filters">Apply Filters</button>
+                <button id="reset-filters">Reset Filters</button>
+            </section>
+            <table class="job-table">
+                <thead>
+                    <tr>
+                        <th>Job ID</th>
+                        <th>Client Name</th>
+                        <th>Job Type</th>
+                        <th>Status</th>
+                        <th>Supervisor</th>
+                        <th>Laborers</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="job-table-body">
+                    <!-- Job data will be dynamically inserted here -->
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button id="prev-page">Previous</button>
+                <button id="next-page">Next</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Job Details Modal -->
+    <div id="job-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-job-title"></h2>
+            <div id="modal-job-details"></div>
+        </div>
+    </div>
+
+    <script>
+        // Sample job data (replace with actual data fetching logic)
+        const jobs = [
+            { id: 'JOB001', client: 'John Doe', type: 'Construction', status: 'ongoing', supervisor: 'Jane Smith', laborers: 5 },
+            { id: 'JOB002', client: 'Alice Johnson', type: 'Plumbing', status: 'completed', supervisor: 'Bob Brown', laborers: 2 },
+            { id: 'JOB003', client: 'Charlie Wilson', type: 'Electrical', status: 'disputed', supervisor: 'Eve Davis', laborers: 3 },
+            { id: 'JOB004', client: 'David Lee', type: 'Construction', status: 'pending', supervisor: 'Frank White', laborers: 7 },
+        ];
+
+        // DOM elements
+        const jobTableBody = document.getElementById('job-table-body');
+        const searchInput = document.getElementById('search-input');
+        const statusFilter = document.getElementById('status-filter');
+        const categoryFilter = document.getElementById('category-filter');
+        const dateFrom = document.getElementById('date-from');
+        const dateTo = document.getElementById('date-to');
+        const applyFiltersBtn = document.getElementById('apply-filters');
+        const resetFiltersBtn = document.getElementById('reset-filters');
+        const prevPageBtn = document.getElementById('prev-page');
+        const nextPageBtn = document.getElementById('next-page');
+        const modal = document.getElementById('job-modal');
+        const modalClose = document.querySelector('.close');
+        const modalJobTitle = document.getElementById('modal-job-title');
+        const modalJobDetails = document.getElementById('modal-job-details');
+
+        // Pagination variables
+        let currentPage = 1;
+        const jobsPerPage = 10;
+
+        // Render jobs table
+        function renderJobs(jobsToRender) {
+            jobTableBody.innerHTML = '';
+            jobsToRender.forEach(job => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${job.id}</td>
+                    <td>${job.client}</td>
+                    <td>${job.type}</td>
+                    <td><span class="status-tag status-${job.status}">${job.status}</span></td>
+                    <td>${job.supervisor}</td>
+                    <td>${job.laborers}</td>
+                    <td class="action-buttons">
+                        <button onclick="viewJobDetails('${job.id}')"><i class="fas fa-eye"></i></button>
+                        <button onclick="editJob('${job.id}')"><i class="fas fa-edit"></i></button>
+                        <button onclick="flagJob('${job.id}')"><i class="fas fa-flag"></i></button>
+                    </td>
+                `;
+                jobTableBody.appendChild(row);
+            });
+        }
+
+        // Initial render
+        renderJobs(jobs.slice(0, jobsPerPage));
+
+        // Filter jobs
+        function filterJobs() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const statusValue = statusFilter.value;
+            const categoryValue = categoryFilter.value;
+            const fromDate = dateFrom.value;
+            const toDate = dateTo.value;
+
+            const filteredJobs = jobs.filter(job => {
+                const matchesSearch = job.id.toLowerCase().includes(searchTerm) ||
+                                      job.client.toLowerCase().includes(searchTerm) ||
+                                      job.type.toLowerCase().includes(searchTerm);
+                const matchesStatus = statusValue === '' || job.status === statusValue;
+                const matchesCategory = categoryValue === '' || job.type.toLowerCase() === categoryValue;
+                // Add date filtering logic here when you have actual date data
+
+                return matchesSearch && matchesStatus && matchesCategory;
+            });
+
+            currentPage = 1;
+            renderJobs(filteredJobs.slice(0, jobsPerPage));
+            updatePagination(filteredJobs.length);
+        }
+
+        applyFiltersBtn.addEventListener('click', filterJobs);
+        resetFiltersBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            statusFilter.value = '';
+            categoryFilter.value = '';
+            dateFrom.value = '';
+            dateTo.value = '';
+            filterJobs();
+        });
+
+        
+    // Pagination (continued)
+    function updatePagination(totalJobs) {
+        const totalPages = Math.ceil(totalJobs / jobsPerPage);
+        prevPageBtn.disabled = currentPage === 1;
+        nextPageBtn.disabled = currentPage === totalPages;
+    }
+
+    prevPageBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            const startIndex = (currentPage - 1) * jobsPerPage;
+            renderJobs(jobs.slice(startIndex, startIndex + jobsPerPage));
+            updatePagination(jobs.length);
+        }
+    });
+
+    nextPageBtn.addEventListener('click', () => {
+        const totalPages = Math.ceil(jobs.length / jobsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            const startIndex = (currentPage - 1) * jobsPerPage;
+            renderJobs(jobs.slice(startIndex, startIndex + jobsPerPage));
+            updatePagination(jobs.length);
+        }
+    });
+
+    // Job Details Modal
+    function viewJobDetails(jobId) {
+        const job = jobs.find(j => j.id === jobId);
+        if (job) {
+            modalJobTitle.textContent = `Job Details: ${job.id}`;
+            modalJobDetails.innerHTML = `
+                <p><strong>Client:</strong> ${job.client}</p>
+                <p><strong>Job Type:</strong> ${job.type}</p>
+                <p><strong>Status:</strong> ${job.status}</p>
+                <p><strong>Supervisor:</strong> ${job.supervisor}</p>
+                <p><strong>Number of Laborers:</strong> ${job.laborers}</p>
+                <!-- Add more job details here -->
+            `;
+            modal.style.display = 'block';
+        }
+    }
+
+    modalClose.onclick = function() {
+        modal.style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    // Edit Job Function (placeholder)
+    function editJob(jobId) {
+        console.log(`Editing job ${jobId}`);
+        // Implement job editing functionality
+    }
+
+    // Flag Job Function (placeholder)
+    function flagJob(jobId) {
+        console.log(`Flagging job ${jobId} for review`);
+        // Implement job flagging functionality
+    }
+
+    // Sorting functionality
+    document.querySelectorAll('.job-table th').forEach(header => {
+        header.addEventListener('click', () => {
+            const column = header.textContent.toLowerCase();
+            jobs.sort((a, b) => {
+                if (a[column] < b[column]) return -1;
+                if (a[column] > b[column]) return 1;
+                return 0;
+            });
+            renderJobs(jobs.slice(0, jobsPerPage));
+        });
+    });
+
+    // Real-time search
+    searchInput.addEventListener('input', filterJobs);
+
+    // Job Status Management
+    function updateJobStatus(jobId, newStatus) {
+        const job = jobs.find(j => j.id === jobId);
+        if (job) {
+            job.status = newStatus;
+            renderJobs(jobs.slice((currentPage - 1) * jobsPerPage, currentPage * jobsPerPage));
+        }
+    }
+
+    // Simulating real-time updates (for demonstration purposes)
+    setInterval(() => {
+        const randomJob = jobs[Math.floor(Math.random() * jobs.length)];
+        const statuses = ['ongoing', 'completed', 'disputed', 'pending'];
+        const newStatus = statuses[Math.floor(Math.random() * statuses.length)];
+        updateJobStatus(randomJob.id, newStatus);
+    }, 10000); // Update a random job status every 10 seconds
+
+    // Dispute Resolution Tools (placeholder)
+    function openDisputeResolutionModal(jobId) {
+        console.log(`Opening dispute resolution modal for job ${jobId}`);
+        // Implement dispute resolution modal
+    }
+
+    // Add event listener for the dispute resolution button (assuming it exists in the job details modal)
+    document.getElementById('resolve-dispute-btn').addEventListener('click', () => {
+        const jobId = modalJobTitle.textContent.split(':')[1].trim();
+        openDisputeResolutionModal(jobId);
+    });
+
+    // Mobile responsiveness
+    function handleResponsiveLayout() {
+        const isMobile = window.innerWidth <= 768;
+        const jobTable = document.querySelector('.job-table');
+        const actionButtons = document.querySelectorAll('.action-buttons');
+
+        if (isMobile) {
+            jobTable.classList.add('mobile-view');
+            actionButtons.forEach(buttons => buttons.classList.add('mobile-view'));
+        } else {
+            jobTable.classList.remove('mobile-view');
+            actionButtons.forEach(buttons => buttons.classList.remove('mobile-view'));
+        }
+    }
+
+    window.addEventListener('resize', handleResponsiveLayout);
+    handleResponsiveLayout(); // Initial call
+
+    // Initialize the page
+    updatePagination(jobs.length);
+</script>
+</body>
+</html>

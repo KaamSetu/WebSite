@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KaamSetu - Post a Large-Scale Project</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+
+        /* Variables */
+        :root {
+            --primary-color: #00978A;
+            --secondary-color: #465FA2;
+            --text-color: #333;
+            --bg-color: #f4f4f4;
+            --white: #ffffff;
+            --gray-light: #e0e0e0;
+            --gray: #9e9e9e;
+            --shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Header styles */
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            height: 40px;
+        }
+
+        nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: red;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 5px;
+            border-radius: 50%;
+        }
+
+        .profile-icon img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Main layout */
+        .container {
+            display: flex;
+            padding-top: 70px; /* Account for fixed header */
+            min-height: 100vh;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--white);
+            padding: 2rem 1rem;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar-menu {
+            list-style-type: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar-menu a:hover {
+            background-color: var(--gray-light);
+        }
+
+        .sidebar-menu i {
+            margin-right: 0.5rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main content styles */
+        main {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .subheading {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            margin-bottom: 2rem;
+        }
+
+        /* Form styles */
+        .form-section {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 5px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .form-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--gray-light);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #007f75;
+        }
+
+        /* Multi-step form */
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .step-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 1rem;
+            }
+
+            .sidebar-menu {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
+
+            .sidebar-menu li {
+                margin-bottom: 0.5rem;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .form-section {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <img src="logo.png" alt="Company Logo" class="logo">
+            <nav>
+                <a href="#" id="nav-projects">Projects</a>
+                <a href="#" id="nav-jobs">Job Posts</a>
+                <a href="#" id="nav-labor">Laborer Management</a>
+                <a href="#" id="nav-contracts">Contracts</a>
+                <a href="#" id="nav-settings">Profile Settings</a>
+            </nav>
+            <div class="header-icons">
+                <button class="btn btn-primary" id="support-button">Support/Contact</button>
+                <div class="notification-icon" id="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count" id="notification-count">3</span>
+                </div>
+                <div class="profile-icon" id="profile-icon">
+                    <img src="profile.jpg" alt="Profile">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#" id="sidebar-dashboard"><i class="fas fa-home"></i>Dashboard</a></li>
+                <li><a href="#" id="sidebar-post-job"><i class="fas fa-plus-circle"></i>Post a Job</a></li>
+                <li><a href="#" id="sidebar-ongoing-jobs"><i class="fas fa-briefcase"></i>Ongoing Jobs</a></li>
+                <li><a href="#" id="sidebar-past-jobs"><i class="fas fa-history"></i>Past Jobs</a></li>
+                <li><a href="#" id="sidebar-payments"><i class="fas fa-credit-card"></i>Payments</a></li>
+                <li><a href="#" id="sidebar-analytics"><i class="fas fa-chart-bar"></i>Analytics</a></li>
+            </ul>
+        </aside>
+
+        <main>
+            <h1>Post a Large-Scale Project</h1>
+            <p class="subheading">For complex projects and large labor requirements</p>
+
+            <form id="post-job-form">
+                <div class="form-step active" id="step1">
+                    <div class="form-section">
+                        <h2>Project Details</h2>
+                        <div class="form-group">
+                            <label for="project-title">Project/Job Title</label>
+                            <input type="text" id="project-title" name="project-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="project-description">Detailed Job Description</label>
+                            <textarea id="project-description" name="project-description" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="project-attachments">Attachments</label>
+                            <input type="file" id="project-attachments" name="project-attachments" multiple>
+                        </div>
+                    </div>
+                    <div class="step-buttons">
+                        <button type="button" class="btn btn-primary next-step">Next</button>
+                    </div>
+                </div>
+
+                <div class="form-step" id="step2">
+                    <div class="form-section">
+                        <h2>Job Categories & Roles</h2>
+                        <div class="form-group">
+                            <label for="job-category">Main Category</label>
+                            <select id="job-category" name="job-category" required>
+                                <option value="">Select a category</option>
+                                <option value="civil-engineering">Civil Engineering</option>
+                                <option value="electrical-work">Electrical Work</option>
+                                <option value="carpentry">Carpentry</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="job-roles">Roles Required</label>
+                            <select id="job-roles" name="job-roles" multiple required>
+                                <option value="project-manager">Project Manager</option>
+                                <option value="site-supervisor">Site Supervisor</option>
+                                <option value="labor-coordinator">Labor Coordinator</option>
+                                <option value="skilled-labor">Skilled Labor</option>
+                                <option value="unskilled-labor">Unskilled Labor</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="step-buttons">
+                        <button type="button" class="btn btn-secondary prev-step">Previous</button>
+                        <button type="button" class="btn btn-primary next-step">Next</button>
+                    </div>
+                </div>
+
+                <div class="form-step" id="step3">
+                    <div class="form-section">
+                        <h2>Location & Job Sites</h2>
+                        <div class="form-group">
+                            <label for="primary-location">Primary Location</label>
+                            <input type="text" id="primary-location" name="primary-location" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="additional-locations">Additional Job Sites</label>
+                            <textarea id="additional-locations" name="additional-locations" placeholder="Enter one location per line"></textarea>
+                        </div>
+                    </div>
+                    <div class="step-buttons">
+                        <button type="button" class="btn btn-secondary prev-step">Previous</button>
+                        <button type="button" class="btn btn-primary next-step">Next</button>
+                    </div>
+                </div>
+
+                <div class="form-step" id="step4">
+                    <div class="form-section">
+                        <h2>Milestones & Timelines</h2>
+                        <div id="milestones-container">
+                            <div class="milestone-entry">
+                                <input type="text" name="milestone-name[]" placeholder="Milestone Name" required>
+                                <input type="date" name="milestone-date[]" required>
+                                <button type="button" class="btn btn-secondary remove-milestone">Remove</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" id="add-milestone">Add Milestone</button>
+                    </div>
+                    <div class="step-buttons">
+                        <button type="button" class="btn btn-secondary prev-step">Previous</button>
+                        <button type="button" class="btn btn-primary next-step">Next</button>
+                    </div>
+                </div>
+
+                <div class="form-step" id="step5">
+                    <div class="form-section">
+                        <h2>Job Budget & Pricing</h2>
+                        <div class="form-group">
+                            <label for="budget-type">Budget Type</label>
+                            <select id="budget-type" name="budget-type" required>
+                                <option value="fixed">Fixed Project Budget</option>
+                                <option value="hourly">Hourly Rates</option>
+                                <option value="milestone">Milestone-based Payments</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="total-budget">Total Budget (₹)</label>
+                            <input type="number" id="total-budget" name="total-budget" required>
+                        </div>
+                        <div id="budget-breakdown-container">
+                            <!-- Dynamic budget breakdown fields will be added here -->
+                        </div>
+                    </div>
+                    <div class="step-buttons">
+                        <button type="button" class="btn btn-secondary prev-step">Previous</button>
+                        <button type="submit" class="btn btn-primary">Post Job</button>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script>
+        // JavaScript for form functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('post-job-form');
+            const steps = document.querySelectorAll('.form-step');
+            const nextButtons = document.querySelectorAll('.next-step');
+            const prevButtons = document.querySelectorAll('.prev-step');
+            let currentStep = 0;
+
+            // Next step
+            nextButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (validateStep(currentStep)) {
+                        steps[currentStep].classList.remove('active');
+                        currentStep++;
+                        steps[currentStep].classList.add('active');
+                    }
+                });
+            });
+
+            // Previous step
+            prevButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    steps[currentStep].classList.remove('active');
+                    currentStep--;
+                    steps[currentStep].classList.add('active');
+                });
+            });
+
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (validateStep(currentStep)) {
+                    // Here you would typically send the form data to your server
+                    alert('Job posted successfully!');
+                    // Reset form or redirect as needed
+                }
+            });
+
+            // Validate each step
+            function validateStep(step) {
+                const currentStepElement = steps[step];
+                const requiredFields = currentStepElement.querySelectorAll('[required]');
+                let isValid = true;
+
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        isValid = false;
+                        field.classList.add('error');
+                    } else {
+                        field.classList.remove('error');
+                    }
+                });
+
+                if (!isValid) {
+                    alert('Please fill in all required fields.');
+                }
+
+                return isValid;
+            }
+
+            // Add milestone
+            const addMilestoneButton = document.getElementById('add-milestone');
+            const milestonesContainer = document.getElementById('milestones-container');
+
+            addMilestoneButton.addEventListener('click', () => {
+                const milestoneEntry = document.createElement('div');
+                milestoneEntry.className = 'milestone-entry';
+                milestoneEntry.innerHTML = `
+                    <input type="text" name="milestone-name[]" placeholder="Milestone Name" required>
+                    <input type="date" name="milestone-date[]" required>
+                    <button type="button" class="btn btn-secondary remove-milestone">Remove</button>
+                `;
+                milestonesContainer.appendChild(milestoneEntry);
+            });
+
+            // Remove milestone
+            milestonesContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('remove-milestone')) {
+                    e.target.closest('.milestone-entry').remove();
+                }
+            });
+
+            // Dynamic budget breakdown based on budget type
+            const budgetType = document.getElementById('budget-type');
+            const budgetBreakdownContainer = document.getElementById('budget-breakdown-container');
+
+            budgetType.addEventListener('change', () => {
+                budgetBreakdownContainer.innerHTML = ''; // Clear previous fields
+
+                switch (budgetType.value) {
+                    case 'fixed':
+                        // No additional fields needed for fixed budget
+                        break;
+                    case 'hourly':
+                        budgetBreakdownContainer.innerHTML = `
+                            <div class="form-group">
+                                <label for="hourly-rate">Hourly Rate (₹)</label>
+                                <input type="number" id="hourly-rate" name="hourly-rate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="estimated-hours">Estimated Total Hours</label>
+                                <input type="number" id="estimated-hours" name="estimated-hours" required>
+                            </div>
+                        `;
+                        break;
+                    case 'milestone':
+                        budgetBreakdownContainer.innerHTML = `
+                            <div class="form-group">
+                                <label for="milestone-breakdown">Milestone Payment Breakdown</label>
+                                <textarea id="milestone-breakdown" name="milestone-breakdown" 
+                                    placeholder="Enter milestone payments (e.g., Milestone 1: ₹10,000)" required></textarea>
+                            </div>
+                        `;
+                        break;
+                }
+            });
+
+            // Additional JavaScript for other interactive features can be added here
+        });
+    </script>
+</body>
+</html>

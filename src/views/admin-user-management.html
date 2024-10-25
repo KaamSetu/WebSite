@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KaamSetu Admin Dashboard - User Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00978A;
+            --secondary-color: #465FA2;
+            --background-color: #f4f7fa;
+            --text-color: #333;
+            --card-background: #ffffff;
+            --hover-color: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed {
+            width: 60px;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .sidebar-menu {
+            list-style-type: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar-menu a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-menu i {
+            margin-right: 10px;
+        }
+
+        /* Main content styles */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+
+        /* Top navigation styles */
+        /* Top navigation styles */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: var(--card-background);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            margin-right: 20px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0, 151, 138, 0.2);
+        }
+
+        .search-bar i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+        }
+
+        .top-nav-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .top-nav-actions > * {
+            margin-left: 15px;
+        }
+
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #dc3545;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 5px;
+            font-size: 10px;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .admin-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .admin-profile .admin-name {
+            font-weight: 500;
+        }
+
+        .admin-profile i {
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .admin-profile.active i {
+            transform: rotate(180deg);
+        }
+
+        .admin-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--card-background);
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+        }
+
+        .admin-dropdown.show {
+            display: block;
+        }
+
+        .admin-dropdown ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .admin-dropdown ul li a {
+            display: block;
+            padding: 10px 15px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .admin-dropdown ul li a:hover {
+            background-color: #f5f5f5;
+        }
+
+        @media (max-width: 768px) {
+            .top-nav {
+                flex-wrap: wrap;
+            }
+
+            .search-bar {
+                order: 1;
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .top-nav-actions {
+                order: 2;
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        /* User Management specific styles */
+        .page-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .filter-button {
+            padding: 8px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .filter-button:hover {
+            background-color: #007f75;
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--card-background);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-table th,
+        .user-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .user-table th {
+            background-color: #f5f5f5;
+            font-weight: 500;
+        }
+
+        .user-table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .user-role {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .user-role.client {
+            background-color: #e1f5fe;
+            color: #0288d1;
+        }
+
+        .user-role.laborer {
+            background-color: #f1f8e9;
+            color: #689f38;
+        }
+
+        .user-role.contractor {
+            background-color: #fff3e0;
+            color: #f57c00;
+        }
+
+        .user-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .user-status.active {
+            background-color: #e8f5e9;
+            color: #4caf50;
+        }
+
+        .user-status.suspended {
+            background-color: #ffebee;
+            color: #f44336;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-button {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .edit-button {
+            background-color: #2196f3;
+            color: white;
+        }
+
+        .suspend-button {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .view-button {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .action-button:hover {
+            opacity: 0.9;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            padding: 8px 12px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            background-color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .pagination button:hover {
+            background-color: var(--hover-color);
+        }
+
+        .pagination button.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background-color: var(--card-background);
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 50%;
+            max-width: 500px;
+            animation: slideIn 0.3s;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+
+            .main-content {
+                padding: 10px;
+            }
+
+            .filters {
+                flex-wrap: wrap;
+            }
+
+            .user-table {
+                font-size: 14px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .modal-content {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>KaamSetu</h2>
+                <button class="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="#"><i class="fas fa-users"></i> User Management</a></li>
+                <li><a href="#"><i class="fas fa-briefcase"></i> Job Management</a></li>
+                <li><a href="#"><i class="fas fa-gavel"></i> Dispute Resolution</a></li>
+                <li><a href="#"><i class="fas fa-money-bill-wave"></i> Payments & Escrow</a></li>
+                <li><a href="#"><i class="fas fa-chart-line"></i> Reports & Analytics</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+        </aside>
+        <main class="main-content">
+            <nav class="top-nav">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="top-nav-actions">
+                    <div class="notification-bell">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    <div class="admin-profile">
+                        <img src="/api/placeholder/40/40" alt="Admin Avatar">
+                        <span class="admin-name">Admin Name</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </nav>
+            <h1 class="page-title">User Management</h1>
+            <div class="filters">
+                <select class="filter-select" id="roleFilter">
+                    <option value="">All Roles</option>
+                    <option value="client">Client</option>
+                    <option value="laborer">Laborer</option>
+                    <option value="contractor">Contractor</option>
+                </select>
+                <select class="filter-select" id="statusFilter">
+                    <option value="">All Statuses</option>
+                    <option value="active">Active</option>
+                    <option value="suspended">Suspended</option>
+                </select>
+                <button class="filter-button" id="applyFilters">Apply Filters</button>
+                <button class="filter-button" id="resetFilters">Reset</button>
+            </div>
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAll"></th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Registration Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <!-- User rows will be dynamically inserted here -->
+                </tbody>
+            </table>
+            <div class="pagination" id="pagination">
+                <!-- Pagination buttons will be dynamically inserted here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit User</h2>
+            <form id="editUserForm">
+                <input type="hidden" id="editUserId">
+                <div>
+                    <label for="editUsername">Username:</label>
+                    <input type="text" id="editUsername" required>
+                </div>
+                <div>
+                    <label for="editEmail">Email:</label>
+                    <input type="email" id="editEmail" required>
+                </div>
+                <div>
+                    <label for="editRole">Role:</label>
+                    <select id="editRole">
+                        <option value="client">Client</option>
+                        <option value="laborer">Laborer</option>
+                        <option value="contractor">Contractor</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="editStatus">Status:</label>
+                    <select id="editStatus">
+                        <option value="active">Active</option>
+                        <option value="suspended">Suspended</option>
+                    </select>
+                </div>
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Suspend User Modal -->
+    <div id="suspendModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Suspend User</h2>
+            <p>Are you sure you want to suspend this user?</p>
+            <button id="confirmSuspend">Yes, Suspend</button>
+            <button id="cancelSuspend">Cancel</button>
+        </div>
+    </div>
+
+    <!-- View User Details Modal -->
+    <div id="viewDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>User Details</h2>
+            <div id="userDetails">
+                <!-- User details will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+// Sidebar toggle functionality
+const sidebarToggle = document.querySelector('.sidebar-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('expanded');
+            });
+
+            
+            document.addEventListener('DOMContentLoaded', function() {
+            const adminProfile = document.querySelector('.admin-profile');
+            const adminDropdown = document.createElement('div');
+            adminDropdown.classList.add('admin-dropdown');
+            adminDropdown.innerHTML = `
+                <ul>
+                    <li><a href="#"><i class="fas fa-user"></i> View Profile</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="#"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
+                </ul>
+            `;
+            adminProfile.appendChild(adminDropdown);
+
+            adminProfile.addEventListener('click', function(e) {
+                e.stopPropagation();
+                this.classList.toggle('active');
+                adminDropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function() {
+                adminProfile.classList.remove('active');
+                adminDropdown.classList.remove('show');
+            });
+
+            // Search functionality
+            const searchInput = document.querySelector('.search-bar input');
+            const searchIcon = document.querySelector('.search-bar i');
+
+            searchInput.addEventListener('input', function() {
+                // In a real application, this would trigger an API call or filter data
+                console.log('Searching for:', this.value);
+            });
+
+            searchInput.addEventListener('focus', function() {
+                searchIcon.style.color = '#000';
+            });
+
+            searchInput.addEventListener('blur', function() {
+                searchIcon.style.color = '#777';
+            });
+
+            // Notification bell functionality
+            const notificationBell = document.querySelector('.notification-bell');
+            notificationBell.addEventListener('click', function() {
+                // In a real application, this would open a notifications panel
+                console.log('Notifications clicked');
+                // You could create a dropdown similar to the admin profile here
+            });
+
+            // Responsive handling for top navigation
+            function handleResponsiveTopNav() {
+                const topNav = document.querySelector('.top-nav');
+                if (window.innerWidth <= 768) {
+                    topNav.classList.add('mobile');
+                } else {
+                    topNav.classList.remove('mobile');
+                }
+            }
+
+            window.addEventListener('resize', handleResponsiveTopNav);
+            handleResponsiveTopNav();
+        });
+// Mock user data
+const users = [
+  { id: 1, username: 'john_doe', email: 'john@example.com', role: 'client', status: 'active', registrationDate: '2023-01-15' },
+  { id: 2, username: 'jane_smith', email: 'jane@example.com', role: 'laborer', status: 'active', registrationDate: '2023-02-20' },
+  { id: 3, username: 'bob_builder', email: 'bob@example.com', role: 'contractor', status: 'suspended', registrationDate: '2023-03-10' },
+  { id: 1, username: 'john_doe', email: 'john@example.com', role: 'client', status: 'active', registrationDate: '2023-01-15' },
+  { id: 2, username: 'jane_smith', email: 'jane@example.com', role: 'laborer', status: 'active', registrationDate: '2023-02-20' },
+  { id: 3, username: 'bob_builder', email: 'bob@example.com', role: 'contractor', status: 'suspended', registrationDate: '2023-03-10' },
+  { id: 1, username: 'john_doe', email: 'john@example.com', role: 'client', status: 'active', registrationDate: '2023-01-15' },
+  { id: 2, username: 'jane_smith', email: 'jane@example.com', role: 'laborer', status: 'active', registrationDate: '2023-02-20' },
+  { id: 3, username: 'bob_builder', email: 'bob@example.com', role: 'contractor', status: 'suspended', registrationDate: '2023-03-10' },
+  { id: 1, username: 'john_doe', email: 'john@example.com', role: 'client', status: 'active', registrationDate: '2023-01-15' },
+  { id: 2, username: 'jane_smith', email: 'jane@example.com', role: 'laborer', status: 'active', registrationDate: '2023-02-20' },
+  { id: 3, username: 'bob_builder', email: 'bob@example.com', role: 'contractor', status: 'suspended', registrationDate: '2023-03-10' },
+  { id: 1, username: 'john_doe', email: 'john@example.com', role: 'client', status: 'active', registrationDate: '2023-01-15' },
+  { id: 2, username: 'jane_smith', email: 'jane@example.com', role: 'laborer', status: 'active', registrationDate: '2023-02-20' },
+  { id: 3, username: 'bob_builder', email: 'bob@example.com', role: 'contractor', status: 'suspended', registrationDate: '2023-03-10' },
+  { id: 1, username: 'john_doe', email: 'john@example.com', role: 'client', status: 'active', registrationDate: '2023-01-15' },
+  { id: 2, username: 'jane_smith', email: 'jane@example.com', role: 'laborer', status: 'active', registrationDate: '2023-02-20' },
+  { id: 3, username: 'bob_builder', email: 'bob@example.com', role: 'contractor', status: 'suspended', registrationDate: '2023-03-10' },
+  { id: 1, username: 'john_doe', email: 'john@example.com', role: 'client', status: 'active', registrationDate: '2023-01-15' },
+  { id: 2, username: 'jane_smith', email: 'jane@example.com', role: 'laborer', status: 'active', registrationDate: '2023-02-20' },
+  { id: 3, username: 'bob_builder', email: 'bob@example.com', role: 'contractor', status: 'suspended', registrationDate: '2023-03-10' },
+  { id: 1, username: 'john_doe', email: 'john@example.com', role: 'client', status: 'active', registrationDate: '2023-01-15' },
+  { id: 2, username: 'jane_smith', email: 'jane@example.com', role: 'laborer', status: 'active', registrationDate: '2023-02-20' },
+  { id: 3, username: 'bob_builder', email: 'bob@example.com', role: 'contractor', status: 'suspended', registrationDate: '2023-03-10' },
+  { id: 1, username: 'john_doe', email: 'john@example.com', role: 'client', status: 'active', registrationDate: '2023-01-15' },
+  { id: 2, username: 'jane_smith', email: 'jane@example.com', role: 'laborer', status: 'active', registrationDate: '2023-02-20' },
+  { id: 3, username: 'bob_builder', email: 'bob@example.com', role: 'contractor', status: 'suspended', registrationDate: '2023-03-10' },
+  { id: 1, username: 'john_doe', email: 'john@example.com', role: 'client', status: 'active', registrationDate: '2023-01-15' },
+  { id: 2, username: 'jane_smith', email: 'jane@example.com', role: 'laborer', status: 'active', registrationDate: '2023-02-20' },
+  { id: 3, username: 'bob_builder', email: 'bob@example.com', role: 'contractor', status: 'suspended', registrationDate: '2023-03-10' },
+  // Add more mock users here
+];
+
+let currentPage = 1;
+const usersPerPage = 10;
+
+function renderUserTable(users) {
+  const tableBody = document.getElementById('userTableBody');
+  tableBody.innerHTML = '';
+  users.forEach(user => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><input type="checkbox" class="user-checkbox" data-id="${user.id}"></td>
+      <td>${user.username}</td>
+      <td>${user.email}</td>
+      <td><span class="user-role ${user.role}">${user.role}</span></td>
+      <td><span class="user-status ${user.status}">${user.status}</span></td>
+      <td>${user.registrationDate}</td>
+      <td class="action-buttons">
+        <button class="action-button edit-button" data-id="${user.id}">Edit</button>
+        <button class="action-button suspend-button" data-id="${user.id}">${user.status === 'active' ? 'Suspend' : 'Activate'}</button>
+        <button class="action-button view-button" data-id="${user.id}">View</button>
+      </td>
+    `;
+    tableBody.appendChild(row);
+  });
+}
+
+function renderPagination(totalUsers) {
+  const totalPages = Math.ceil(totalUsers / usersPerPage);
+  const pagination = document.getElementById('pagination');
+  pagination.innerHTML = '';
+  for (let i = 1; i <= totalPages; i++) {
+    const button = document.createElement('button');
+    button.textContent = i;
+    button.addEventListener('click', () => {
+      currentPage = i;
+      renderUserTable(users.slice((currentPage - 1) * usersPerPage, currentPage * usersPerPage));
+      renderPagination(users.length);
+    });
+    if (i === currentPage) {
+      button.classList.add('active');
+    }
+    pagination.appendChild(button);
+  }
+}
+
+function applyFilters() {
+  const roleFilter = document.getElementById('roleFilter').value;
+  const statusFilter = document.getElementById('statusFilter').value;
+  const filteredUsers = users.filter(user => {
+    return (roleFilter === '' || user.role === roleFilter) && (statusFilter === '' || user.status === statusFilter);
+  });
+  renderUserTable(filteredUsers.slice((currentPage - 1) * usersPerPage, currentPage * usersPerPage));
+  renderPagination(filteredUsers.length);
+}
+
+function resetFilters() {
+  document.getElementById('roleFilter').value = '';
+  document.getElementById('statusFilter').value = '';
+  applyFilters();
+}
+
+document.getElementById('applyFilters').addEventListener('click', applyFilters);
+document.getElementById('resetFilters').addEventListener('click', resetFilters);
+
+// Render initial table and pagination
+renderUserTable(users.slice(0, usersPerPage));
+renderPagination(users.length);
+
+// Event listener for checkbox
+document.getElementById('selectAll').addEventListener('change', (event) => {
+  const checkboxes = document.querySelectorAll('.user-checkbox');
+  checkboxes.forEach(checkbox => {
+    checkbox.checked = event.target.checked;
+  });
+});
+
+// Event listeners for modal buttons
+const editModal = document.getElementById('editModal');
+const suspendModal = document.getElementById('suspendModal');
+const viewDetailsModal = document.getElementById('viewDetailsModal');
+const closeButtons = document.querySelectorAll('.close');
+
+closeButtons.forEach(closeButton => {
+  closeButton.addEventListener('click', () => {
+    editModal.style.display = 'none';
+    suspendModal.style.display = 'none';
+    viewDetailsModal.style.display = 'none';
+  });
+});
+
+// Event listener for edit button
+document.querySelector('.user-table').addEventListener('click', (event) => {
+  if (event.target.classList.contains('edit-button')) {
+    const userId = event.target.dataset.id;
+    const user = users.find(user => user.id === parseInt(userId));
+    document.getElementById('editUserId').value = user.id;
+    document.getElementById('editUsername').value = user.username;
+    document.getElementById('editEmail').value = user.email;
+    document.getElementById('editRole').value = user.role;
+    document.getElementById('editStatus').value = user.status;
+    editModal.style.display = 'block';
+  }
+});
+
+// Event listener for edit user form
+document.getElementById('editUserForm').addEventListener('submit', (event) => {
+  event.preventDefault();
+  const userId = document.getElementById('editUserId').value;
+  const username = document.getElementById('editUsername').value;
+  const email = document.getElementById('editEmail').value;
+  const role = document.getElementById('editRole').value;
+  const status = document.getElementById('editStatus').value;
+  const updatedUser = users.find(user => user.id === parseInt(userId));
+  updatedUser.username = username;
+  updatedUser.email = email;
+  updatedUser.role = role;
+  updatedUser.status = status;
+  renderUserTable(users.slice((currentPage - 1) * usersPerPage, currentPage * usersPerPage));
+  editModal.style.display = 'none';
+});
+
+// Event listener for suspend button
+document.querySelector('.user-table').addEventListener('click', (event) => {
+  if (event.target.classList.contains('suspend-button')) {
+    const userId = event.target.dataset.id;
+    const user = users.find(user => user.id === parseInt(userId));
+    const confirmSuspendButton = document.getElementById('confirmSuspend');
+    const cancelSuspendButton = document.getElementById('cancelSuspend');
+    confirmSuspendButton.addEventListener('click', () => {
+      user.status = user.status === 'active' ? 'suspended' : 'active';
+      renderUserTable(users.slice((currentPage - 1) * usersPerPage, currentPage * usersPerPage));
+      suspendModal.style.display = 'none';
+    });
+    cancelSuspendButton.addEventListener('click', () => {
+      suspendModal.style.display = 'none';
+    });
+    suspendModal.style.display = 'block';
+  }
+});
+
+// Event listener for view button
+document.querySelector('.user-table').addEventListener('click', (event) => {
+  if (event.target.classList.contains('view-button')) {
+    const userId = event.target.dataset.id;
+    const user = users.find(user => user.id === parseInt(userId));
+    const userDetailsDiv = document.getElementById('userDetails');
+    userDetailsDiv.innerHTML = `
+      <p><strong>Username:</strong> ${user.username}</p>
+      <p><strong>Email:</strong> ${user.email}</p>
+      <p><strong>Role:</strong> ${user.role}</p>
+      <p><strong>Status:</strong> ${user.status}</p>
+      <p><strong>Registration Date:</strong> ${user.registrationDate}</p>
+    `;
+    viewDetailsModal.style.display = 'block';
+  }
+});
+</script>
+</body>
+</html>
